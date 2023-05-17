@@ -139,9 +139,7 @@ mj(X):
 
 ### Perguntas interessantes respondidas pela chatgpt
 
-```
-How can we mathematically decide that a problem can be solved using a greedy algorithm?
-```
+#### How can we mathematically decide that a problem can be solved using a greedy algorithm?
 
 To determine if a problem can be solved using a greedy algorithm, you generally need to evaluate the problem's properties and characteristics. While there is no definitive mathematical test, you can consider the following factors:
 
@@ -153,9 +151,7 @@ To determine if a problem can be solved using a greedy algorithm, you generally 
 
 While these considerations can guide your decision, keep in mind that they do not guarantee the success of a greedy approach. It's crucial to thoroughly understand the problem and analyze its properties to determine the most appropriate algorithmic approach.
 
-```
-how can i try to best determine a local optimal solution? what are some analytical steps I should take in a general solution to a problem?
-```
+#### how can i try to best determine a local optimal solution? what are some analytical steps I should take in a general solution to a problem?
 
 When attempting to find a local optimal solution to a problem, you can follow these analytical steps:
 
