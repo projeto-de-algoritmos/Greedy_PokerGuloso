@@ -1,13 +1,12 @@
 # Projeto sem Nome
 
-**Número da Lista**: ?
+**Número da Lista**: ?<br>
 **Conteúdo da Disciplina**: GULOSOS 😏<br>
 
 ## Alunos
 | Matrícula | Aluno           |
 | --------- | --------------- |
-| xx/xxxxxx | xxxx xxxx xxxxx |
-| xx/xxxxxx | xxxx xxxx xxxxx |
+| 18/0027239 | Renato Britto Araujo |
 
 ## Sobre 
 <!-- Descreva os objetivos do seu projeto e como ele funciona.  -->
