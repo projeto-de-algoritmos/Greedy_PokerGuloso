@@ -4,8 +4,8 @@
 **Conteúdo da Disciplina**: GULOSOS 😏<br>
 
 ## Alunos
-| Matrícula | Aluno           |
-| --------- | --------------- |
+| Matrícula  | Aluno                |
+| ---------- | -------------------- |
 | 18/0027239 | Renato Britto Araujo |
 
 ## Sobre 
@@ -75,20 +75,50 @@ Caso 2:
 - Y=[1,0,3,2]
 - Eu escolho a arma que causaria o maior valor mínimo no vetor Y. Ou seja, se uso 1 e Y vira [1,0,1,0] mas se eu uso 2, o Y vira [0,0,1,1], eu escolho o 2 porque o primeiro elemento do vetor é menor que qualquer elemento do vetor no caso de usar o 1 - a chance de derrota se torna maior por possuir menos contrataques.
 
-Caso 2:
+Caso 3:
 - X=[1,1,0,0]
 - Se arma 1 destroi 3 e 4.
 - Se arma 2 destroi 3 e 1.
 - Y=[1,0,2,1]
 - Qualquer escolha que eu faço reduzirá o vetor Y em mesma proporção, portanto qualquer escolha é correta. 
 
-Portanto, a escolha sempre será definida por: o que causa a menor variação do valor mínimo no vetor Y, e no caso de empate, será o que causa a menor variação dentro do vetor Y (que sempre será negativa).
+Portanto, a escolha sempre será definida por: o que causa a menor variação do valor mínimo no vetor Y, e no caso de empate, será o que causa a menor variação dentro do vetor Y (que sempre será negativa). Se a resposta não pode ser determinada assim, qualquer escolha é igualmente válida.
 
 Como todas as armas representa uma união distinta do conjunto de armas que são contratacadas e contratacam, isso representa a solução da escolha porque é sempre uma escolha ideal dado o cenário apresentado - ela é gulosa.
 
-### Sobre as jogadas e as rodadas
+### Sobre tempo e as rodadas
+
+Se modelarmos o jogo de forma que o inimigo realize todos os ataques na rodada 0, a solução acima se aplica sem maiores dificuldades.
+
+Se modelarmos o jogo de forma que o inimigo possa atacar em uma rodada > 0 e nós podemos contratacar rodadas > 0. A solução acima não serve para fazer decisões.
+
+Perguntas novas:
+- Eu posso evitar de jogar numa rodada? Existe algum caso onde essa escolha é ideal?
+- Minhas armas são renovadas de alguma forma? Algumas formas como isso poderia acontecer:
+  - Recebo uma arma a cada U(i) rodadas
+  - Quando uso uma arma, ao final de seu uso que gasta R tempo, ela retorna pra mim ou desaparece?
+    - Em ambos os casos anteriores, eu sempre sei em quanto tempo terei armas pra resolver algum ataque caso não tenha nenhuma agora.
+    - Sendo assim, é possível calcular um vetor Yi onde i é uma rodada no futuro.
+    - Cada elemento no vetor Yi pode ser maior que o mesmo elemento em Yi-1.
+    - Seja o vetor bidimensional Yf = [Y0, Y1, Y2,...,YN] (note que Y0 é o vetor Y atual)
+
+X = [1,1,0,0]
+D = [[2,3],[3,4]]
+U = [3,3,-1,-1]
+Yf = [
+    [0,1,1,1],
+    [0,1,1,1],
+    [0,1,1,1],
+    [0,2,2,2],
+]
+mj(X):
 
 
+    return 
+
+- Meu inimigo renova armas de alguma forma?
+  - Se lança i arma a cada P(i) partidas
+  
 
 ## Screenshots
 <!-- Adicione 3 ou mais screenshots do projeto em funcionamento. -->
@@ -107,3 +137,46 @@ Como todas as armas representa uma união distinta do conjunto de armas que são
 
 
 
+### Perguntas interessantes respondidas pela chatgpt
+
+```
+How can we mathematically decide that a problem can be solved using a greedy algorithm?
+```
+
+To determine if a problem can be solved using a greedy algorithm, you generally need to evaluate the problem's properties and characteristics. While there is no definitive mathematical test, you can consider the following factors:
+
+    Greedy Choice Property: A greedy algorithm makes locally optimal choices at each step in the hope of finding a global optimum. If the problem exhibits the greedy choice property, meaning that a locally optimal choice always leads to a globally optimal solution, a greedy algorithm may be applicable.
+
+    Optimal Substructure: A problem has optimal substructure if an optimal solution to the problem contains optimal solutions to its subproblems. This property is important because it allows a greedy algorithm to make a series of choices that collectively lead to an optimal solution.
+
+    Proof or Counterexamples: Analyze the problem and try to prove that a greedy algorithm will always yield an optimal solution. Alternatively, look for counterexamples where a greedy approach fails to produce an optimal solution. By examining the problem's specific characteristics, you can gain insight into the applicability of a greedy algorithm.
+
+While these considerations can guide your decision, keep in mind that they do not guarantee the success of a greedy approach. It's crucial to thoroughly understand the problem and analyze its properties to determine the most appropriate algorithmic approach.
+
+```
+how can i try to best determine a local optimal solution? what are some analytical steps I should take in a general solution to a problem?
+```
+
+When attempting to find a local optimal solution to a problem, you can follow these analytical steps:
+
+    Define the Problem: Clearly understand the problem statement, its constraints, and the desired outcome. This step ensures you have a solid understanding of what needs to be solved.
+
+    Identify the Objective Function: Determine the metric or objective that defines the quality of a solution. This could be maximizing or minimizing a certain value, such as profit, cost, efficiency, or error.
+
+    Analyze the Problem Structure: Break down the problem into its constituent elements, such as variables, constraints, dependencies, and relationships between different components. Understand how these elements interact and affect the objective function.
+
+    Explore the Solution Space: Determine the range of possible solutions for the problem. This could involve analyzing the feasible region or identifying the set of valid solutions based on the constraints.
+
+    Develop a Heuristic: A heuristic is a problem-solving strategy or rule of thumb that helps guide the search for a solution. It provides a direction or guideline for making decisions at each step. This could involve leveraging prior knowledge, intuition, or insights gained from analyzing the problem structure.
+
+    Design a Local Search Strategy: Identify a method for iteratively improving solutions by making incremental changes. This could involve exploring neighboring solutions, evaluating their quality based on the objective function, and moving towards better solutions.
+
+    Implement and Evaluate: Implement the local search strategy and start with an initial solution. Iterate and evaluate the quality of the solutions obtained. Keep track of the best solution found so far.
+
+    Termination Condition: Determine the stopping criteria for the local search algorithm. This could be a specific number of iterations, reaching a certain threshold of improvement, or when a predefined condition is met.
+
+    Analyze the Solution: Evaluate the final solution obtained and analyze its quality and optimality with respect to the objective function. Compare it against known optimal solutions if available.
+
+    Refine and Iterate: If necessary, refine the problem definition, objective function, heuristics, or search strategy based on the insights gained from analyzing the solution. Repeat the process to improve the solution further.
+
+By following these steps, you can approach problems systematically and iteratively improve towards a local optimal solution. Remember that the effectiveness of this approach depends on the problem's nature and the chosen heuristics or search strategy.
