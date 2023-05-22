@@ -90,7 +90,7 @@ Como todas as armas representa uma união distinta do conjunto de armas que são
 
 #### Sobre tempo e as rodadas
 
-Se modelarmos o jogo de forma que o inimigo realize todos os ataques na rodada 0, a solução acima se aplica sem maiores dificuldades.
+Se modelarmos o jogo de forma que o inimigo realize todos os ataques na rodada 0, a solução acima se aplica sem maiores dificuldades. Esse é a **Versão 1**.
 
 Se modelarmos o jogo de forma que o inimigo possa atacar em uma rodada > 0 e nós podemos contratacar rodadas > 0. A solução acima não serve para fazer decisões.
 
@@ -124,11 +124,17 @@ mj(X):
 
 ### Proposta de implementação
 
+
 Em passos:
 1. Faz interface para realizar escolhas e criar cenários
 2. Desenha interface, incluindo as escolhas de alguma forma
 3. Faz sistema de gerar os ataques
   - Implementa múltiplas soluções
+
+| Versão | Descrição                                                                                                   |
+| ------ | ----------------------------------------------------------------------------------------------------------- |
+| 1      | O inimigo faz todas as jogadas, e nos respondemos todas (dentro da medida do possível)                      |
+| 2      | O inimigo faz jogadas em todo turno, e todo turno nos fazemos a decisão de como tratar as jogadas em aberto |
 
 ## Screenshots
 <!-- Adicione 3 ou mais screenshots do projeto em funcionamento. -->
