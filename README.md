@@ -1,6 +1,6 @@
 # Guerra de Defesa
 
-**Número da Lista**: ?<br>
+**Número da Lista**: 5<br>
 **Conteúdo da Disciplina**: GULOSOS 😏<br>
 
 ## Alunos
@@ -11,7 +11,9 @@
 ## Sobre 
 <!-- Descreva os objetivos do seu projeto e como ele funciona.  -->
 
-A ideia seria montar uma simulação de um jogo estilo pedra papel e tesoura, onde existe "nosso exército" e o "exército deles". O exército deles usará (atacará usando) "armas" contra nós, e nós precisamos retornar (contratacar) cada ataque inimigo utilizando as "armas" que possuímos. Cada arma destroi um conjunto de outras armas:
+O objetivo é investigar as condições que tornam ou não um problema em guloso. Vamos comparar diferentes modelos de problemas e analisar onde que uma solução gulosa pode se encaixar ou não, e qual ela é.
+
+Uma ideia lúdica para fazer isso será montar uma simulação de guerra estilo pedra papel e tesoura, onde existe "nosso exército" e o "exército deles". O exército deles usará (atacará usando) "armas" contra nós, e nós precisamos retornar (contratacar) cada ataque inimigo utilizando as "armas" que possuímos. Cada arma destroi um conjunto de outras armas:
 
 | Arma                   | Contrataca                                |
 | ---------------------- | ----------------------------------------- |
@@ -86,7 +88,7 @@ Portanto, a escolha sempre será definida por: o que causa a menor variação do
 
 Como todas as armas representa uma união distinta do conjunto de armas que são contratacadas e contratacam, isso representa a solução da escolha porque é sempre uma escolha ideal dado o cenário apresentado - ela é gulosa.
 
-### Sobre tempo e as rodadas
+#### Sobre tempo e as rodadas
 
 Se modelarmos o jogo de forma que o inimigo realize todos os ataques na rodada 0, a solução acima se aplica sem maiores dificuldades.
 
@@ -119,6 +121,14 @@ mj(X):
 - Meu inimigo renova armas de alguma forma?
   - Se lança i arma a cada P(i) partidas
   
+
+### Proposta de implementação
+
+Em passos:
+1. Faz interface para realizar escolhas e criar cenários
+2. Desenha interface, incluindo as escolhas de alguma forma
+3. Faz sistema de gerar os ataques
+  - Implementa múltiplas soluções
 
 ## Screenshots
 <!-- Adicione 3 ou mais screenshots do projeto em funcionamento. -->
