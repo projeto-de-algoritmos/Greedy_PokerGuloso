@@ -124,17 +124,17 @@ mj(X):
 
 ### Proposta de implementação
 
-
 Em passos:
 1. Faz interface para realizar escolhas e criar cenários
 2. Desenha interface, incluindo as escolhas de alguma forma
 3. Faz sistema de gerar os ataques
   - Implementa múltiplas soluções
 
-| Versão | Descrição                                                                                                   |
-| ------ | ----------------------------------------------------------------------------------------------------------- |
-| 1      | O inimigo faz todas as jogadas, e nos respondemos todas (dentro da medida do possível)                      |
-| 2      | O inimigo faz jogadas em todo turno, e todo turno nos fazemos a decisão de como tratar as jogadas em aberto |
+| Versão | Descrição                                                                                                                 |
+| ------ | ------------------------------------------------------------------------------------------------------------------------- |
+| 1      | O inimigo faz todas as jogadas, e nos respondemos todas (dentro da medida do possível)                                    |
+| 2      | O mesmo do anterior, mas cada arma tem uma velocidade de derrota (tempo Xi para cada arma em X sem reposta causa derrota) |
+| 3      | O inimigo faz jogadas em todo turno, e todo turno nos fazemos a decisão de como tratar as jogadas em aberto               |
 
 ## Screenshots
 <!-- Adicione 3 ou mais screenshots do projeto em funcionamento. -->
