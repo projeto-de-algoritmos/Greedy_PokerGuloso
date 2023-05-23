@@ -1,3 +1,6 @@
+import itertools
+
+
 class Carta:
     naipe: str
     valor: int
@@ -19,6 +22,7 @@ class Carta:
 
 
 def faz_permutacao_cartas() -> list[Carta]:
+    cartas = []
     for i in ['C', 'E', 'O', 'P']:
         for j in range(2, 14):
             if j < 10:
@@ -31,7 +35,8 @@ def faz_permutacao_cartas() -> list[Carta]:
                 j = 'K'
             elif j == 13:
                 j = 'A'
-            yield Carta(i, j)
+            cartas.append(Carta(i, j))
+    return itertools.permutations(cartas)
 
 
 class EstadoDoJogoParaJogador:

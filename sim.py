@@ -23,9 +23,16 @@ class Jogador:
 
 class Partida:
 
+    mesa: list[Carta]
+    historico_estado: list[str]
+    banca: int
+    jogadores: list[Jogador]
+    deck: list[Carta]
+
     def __init__(self):
         self.historico_estado = []
         self.mesa = []
+        self.banca = 0
         cartas = faz_permutacao_cartas()
         self.jogadores = [
             Jogador(fazer_jogadaA, cartas[0:2]),
@@ -34,46 +41,69 @@ class Partida:
         self.deck = cartas[4:]
 
     def play(self):
-        # novo jogo
-        while True:
+        self.historico_estado.append("iniciando partida")
+        self.historico_estado.append("MESA: {self.mesa}")
+        self.historico_estado.append("processando jogadores")
 
-            # novo turno (acabou de descer a mão)
-            indice_jogador_aumento = -1
-            valor_aumento = -1
-            i = 0
-            min_i = len(self.jogadores)
+        self.deck, carta_nova = self.deck[1:]
 
-            while i < min_i:
-                jogador = self.jogadores[i]
-                if jogador.cartas == []:
-                    continue
+        self.processar_jogadores()
+        self.historico_estado.append("fim de turno")
+        return self.historico_estado
 
-                desistiu, aumento = jogador.fazer_jogada(self.estado)
-                if desistiu:
-                    jogador.cartas = []
+    def processar_jogadores(self):
+        # novo turno (acabou de descer a mão)
+        indice_jogador_aumento = -1
+        valor_aumento = -1
+        big_blind = 0
+        small_blind = 1
+        xi = 0
+        min_i = len(self.jogadores)
 
-                if aumento > 0:
-                    if indice_jogador_aumento == i:
+        while xi < min_i:
+            i = (xi) % len(self.jogadores)
+            jogador = self.jogadores[i]
+            if jogador.cartas == None:
+                continue
+
+            desistiu, aumento = jogador.fazer_jogada(self.estado)
+            if desistiu:
+                self.historico_estado.append(f"jogador {i} desistiu")
+                jogador.cartas = None
+
+            if aumento > 0:
+                if indice_jogador_aumento == i:
+                    self.historico_estado.append(
+                        f"ERRO! jogador {i} jogou apostou duas vezes")
+                    raise ValueError(
+                        "Jogador não pode aumentar duas vezes, alguém precisa aumentar antes")
+                if aumento < valor_aumento:
+                    self.historico_estado.append(
+                        f"ERRO! jogador {i} apostou menos que o anterior")
+                    raise ValueError(
+                        "Aumento não é maior que o anterior")
+                if aumento > valor_aumento:
+                    if valor_aumento * 2 > aumento:
+                        self.historico_estado.append(
+                            f"ERRO! jogador {i} apostou menos que o dobro da aposta atual")
                         raise ValueError(
-                            "Jogador não pode aumentar duas vezes, alguém precisa aumentar antes")
-                    if aumento > valor_aumento:
-                        if valor_aumento * 2 > aumento:
-                            raise ValueError(
-                                "Aumento não é o dobro do anterior")
-                        else:
-                            indice_jogador_aumento = i
-                            valor_aumento = aumento
-                            min_i += len(self.jogadores) - 1
-                    if carta != None:
-                        raise ValueError(
-                            "Jogador não pode aumentar e jogar carta")
+                            "Aumento não é o dobro do anterior")
+                    else:
+                        indice_jogador_aumento = i
+                        valor_aumento = aumento
+                        min_i += len(self.jogadores) - 1
+                        self.historico_estado.append(
+                            f"jogador {i} aumentou para {aumento}")
                 else:
+                    self.historico_estado.append(
+                        f"jogador {i} igualou a aposta {aumento}")
+                    if jogador.banca < aumento:
+                        self.historico_estado.append(
+                            f"ERRO! jogador {i} não tem dinheiro para igualar")
+                        raise ValueError(
+                            "Jogador não tem dinheiro para igualar")
 
-                self.estado.mao.remove(carta)
-                self.estado.mesa.append(carta)
-                self.historico_estado.append(self)
-
-                i = (i + 1) % len(self.jogadores)
+            xi += 1
 
         return self.historico_estado
 
