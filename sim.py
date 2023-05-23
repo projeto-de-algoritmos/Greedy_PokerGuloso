@@ -1,112 +1,54 @@
 import json
-import copy
+from scriptA import fazer_jogada as fazer_jogadaA
+from scriptB import fazer_jogada as fazer_jogadaB
+from common import *
 
 
-class Arma():
+class Jogador:
+    __fazer_jogada: callable[[EstadoDoJogo], Carta]
+    cartas: list[Carta]
 
-    def __init__(self, nome: str, contrataca: list[str]):
-        self.nome = nome
-        self.contrataca = contrataca
+    def __init__(self, fazer_jogada):
+        self.__fazer_jogada = fazer_jogada
 
-    def __repr__(self):
-        return f"Arma({self.nome}, {self.contrataca})"
-
-    def ganha_de(self, arma: "Arma") -> bool:
-        return arma.nome in self.contrataca
-
-    def perde_de(self, arma: "Arma") -> bool:
-        return self.nome in arma.contrataca
+    def fazer_jogada(self, estado: EstadoDoJogo):
+        carta = self.__fazer_jogada(estado)
+        if carta not in self.cartas:
+            raise ValueError("Carta não está na mão")
+        return carta
 
 
-class GeradorDeArmas():
-
-    def gerar_inicial(self) -> list[Arma]:
-        raise NotImplementedError
-
-    def gerar_continuo(self, cenario: 'Cenario') -> list[Arma]:
-        raise NotImplementedError
-
-
-class GeradorDeArmasJson(GeradorDeArmas):
-
-    inicial: list[str]
-
-    def __init__(self, file: str) -> None:
-        super().__init__()
-        self.inicial = []
-        with open(file, "r") as f:
-            fjson = json.loads(f.read())
-            self.inicial = fjson["inicial"]
-
-    def gerar_inicial(self) -> list[Arma]:
-        return self.inicial
-
-    def gerar_continuo(cenario: 'Cenario') -> list[Arma]:
-        return []
-
-
-class Cenario():
-
-    last_arma_index: int
-    armas_defesa: list[Arma]
-    armas_ataque: list[Arma]
-
-    def __init__(self, regras):
-        self.last_arma_index = 0
-
-        self.regras = regras
-        armas_ataque_str: list[str] = regras.gerador_armas_inimigas.gerar_inicial(
-        )
-        self.armas_ataque = [copy.copy(regras.armas_index[arma])
-                             for arma in armas_ataque_str]
-
-        armas_defesa_str: list[str] = regras.gerador_armas_aliadas.gerar_inicial(
-        )
-        self.armas_defesa = [copy.copy(regras.armas_index[arma])
-                             for arma in armas_defesa_str]
-
-    def is_condicao_de_derrota(self) -> bool:
-        return True
-
-
-class Simulacao():
+class Partida:
 
     def __init__(self):
-        pass
+        self.historico_estado = []
+        self.mesa = []
+        cartas = faz_permutacao_cartas()
+        self.jogadores = [
+            Jogador(fazer_jogadaA, cartas[0:2]),
+            Jogador(fazer_jogadaB, cartas[2:4]),
+        ]
+        self.deck = cartas[4:]
 
-    def simular(self, cenario):
-        pass
+    def play(self):
+        # novo jogo
+        while True:
+            # novo turno
+            for jogador in self.jogadores:
+                carta = jogador.fazer_jogada(self.estado)
+                self.estado.mao.remove(carta)
+                self.estado.mesa.append(carta)
+                self.historico_estado.append(self)
 
-
-class RegrasDoJogo():
-    armas_index: dict[str, Arma]
-    gerador_armas_inimigas: GeradorDeArmas
-    gerador_armas_aliadas: GeradorDeArmas
-
-
-class RegrasDoJogo_Versao1(RegrasDoJogo):
-
-    def __init__(self):
-        with open("armas.json") as f:
-            armas = json.loads(f.read())["armas"]
-            armas = [Arma(arma["nome"], arma["contrataca"])
-                     for arma in armas]
-            self.armas_index = {arma.nome: arma for arma in armas}
-
-        self.gerador_armas_inimigas = GeradorDeArmasJson(
-            "armas_inimigas.json")
-        self.gerador_armas_aliadas = GeradorDeArmasJson("armas_aliadas.json")
+        return self.historico_estado
 
 
 def main():
-    regras = RegrasDoJogo_Versao1()
 
-    cenario = Cenario(regras)
-
-    simulacao = Simulacao()
-
-    while not cenario.is_condicao_de_derrota():
-        simulacao.simular(cenario)
+    while True:
+        partida = Partida()
+        historico_estado = partida.play()
+        print(historico_estado)
 
 
 if __name__ == "__main__":

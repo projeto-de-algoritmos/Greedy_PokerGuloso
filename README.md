@@ -1,4 +1,4 @@
-# Guerra de Defesa
+# Poker Guloso
 
 **Número da Lista**: 5<br>
 **Conteúdo da Disciplina**: GULOSOS 😏<br>
@@ -9,9 +9,16 @@
 | 18/0027239 | Renato Britto Araujo |
 
 ## Sobre 
-<!-- Descreva os objetivos do seu projeto e como ele funciona.  -->
+<!-- Descreva os objetivos do seu projeto e como ele 
+funciona.  -->
 
-O objetivo é investigar as condições que tornam ou não um problema em guloso. Vamos comparar diferentes modelos de problemas e analisar onde que uma solução gulosa pode se encaixar ou não, e qual ela é.
+Poker guloso: jogo de poker entre 2 algoritmos gulosos para ver qual heurística é melhor.
+Os arquivos `scriptA.py` e `scriptB.py` irão implementar a função `carta fazer_jogada(estado)` 
+onde vai receber o estado do jogo e retornará qual carta irá jogar.
+
+Na pasta `estrategias` haverão diversas implementações para se testar.
+
+<!-- O objetivo é investigar as condições que tornam ou não um problema em guloso. Vamos comparar diferentes modelos de problemas e analisar onde que uma solução gulosa pode se encaixar ou não, e qual ela é.
 
 Uma ideia lúdica para fazer isso será montar uma simulação de guerra estilo pedra papel e tesoura, onde existe "nosso exército" e o "exército deles". O exército deles usará (atacará usando) "armas" contra nós, e nós precisamos retornar (contratacar) cada ataque inimigo utilizando as "armas" que possuímos. Cada arma destroi um conjunto de outras armas:
 
@@ -134,7 +141,7 @@ Em passos:
 | ------ | ------------------------------------------------------------------------------------------------------------------------- |
 | 1      | O inimigo faz todas as jogadas, e nos respondemos todas (dentro da medida do possível)                                    |
 | 2      | O mesmo do anterior, mas cada arma tem uma velocidade de derrota (tempo Xi para cada arma em X sem reposta causa derrota) |
-| 3      | O inimigo faz jogadas em todo turno, e todo turno nos fazemos a decisão de como tratar as jogadas em aberto               |
+| 3      | O inimigo faz jogadas em todo turno, e todo turno nos fazemos a decisão de como tratar as jogadas em aberto               | -->
 
 ## Screenshots
 <!-- Adicione 3 ou mais screenshots do projeto em funcionamento. -->
