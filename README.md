@@ -13,8 +13,8 @@
 funciona.  -->
 
 Poker guloso: jogo de poker entre 2 algoritmos gulosos para ver qual heurística é melhor.
-Os arquivos `scriptA.py` e `scriptB.py` irão implementar a função `carta fazer_jogada(estado)` 
-onde vai receber o estado do jogo e retornará qual carta irá jogar.
+Os arquivos `scriptA.py` e `scriptB.py` irão implementar a função `desistiu, aumentou fazer_jogada(estado)` 
+onde vai receber o estado do jogo (com as suas cartas) e retornará qual carta irá jogar.
 
 Na pasta `estrategias` haverão diversas implementações para se testar.
 
