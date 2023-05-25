@@ -33,12 +33,14 @@ class Jogador:
             raise ValueError("Carta não está na mão")
         return carta, desistiu, aumento
 
+    def limpar_turno(self):
+        self.aposta_turno_atual = 0
+
 
 class Rodada:
     jogadores: list[Jogador]
     historico_estado: list[str]
 
-    apostas: list[int]
     valor_aumento: int
     pote_rodada: int
 
@@ -72,6 +74,7 @@ class Rodada:
     def log_jogador(self, jogador: Jogador, msg: str):
         self.historico_estado.append(f"jogador {jogador.nome}: {msg}")
 
+    # toda vez que o jogador faz jogada falha, vamos assumir que ele desistiu por W.O.
     def processa_aposta(self, jogador, aumento):
         i = self.jogadores.index(jogador)
 
@@ -79,8 +82,8 @@ class Rodada:
             self.jogador_falhou(
                 jogador, f"apostou duas vezes")
 
-        valor_novo = self.valor_aumento - aumento
-        if valor_novo > jogador.banca:
+        valor_adicionado = aumento - jogador.aposta_turno_atual
+        if valor_adicionado > jogador.banca:
             self.jogador_falhou(
                 jogador, f"não tem dinheiro para igualar")
 
@@ -95,26 +98,27 @@ class Rodada:
 
             self.indice_jogador_aumento = i
             self.valor_aumento = aumento
-            jogador.apo
+            self.turnos_restantes += len(self.jogadores) - 1
+            self.log_jogador(
+                self.jogadores[i], f"aumentou para {aumento}")
 
         if aumento == self.valor_aumento:
             self.historico_estado.append(
                 f"jogador {jogador.nome} igualou a aposta {aumento}")
 
-        self.pote_rodada = sum(self.apostas)
-        self.turnos_restantes += len(self.jogadores) - 1
-        self.log_jogador(
-            self.jogadores[i], f"aumentou para {aumento}")
+        jogador.aposta_turno_atual += valor_adicionado
+        jogador.aposta_total += valor_adicionado
+        self.pote_rodada += valor_adicionado
 
-    # toda vez que o jogador faz jogada falha, vamos assumir que ele desistiu por W.O.
+    # retorna os jogadores que ainda estão no jogo
     def processar_rodada(self):
         self.historico_estado.append("começando rodada")
 
         while self.turnos_jogados < self.turnos_restantes:
-            self.historico_estado.append("começando rodada")
-
             i = self.indice_jogador_atual
             jogador = self.jogadores[i]
+
+            self.log_jogador(jogador, f"começando rodada")
 
             desistiu, aumento = jogador.fazer_jogada(
                 self.get_estado_jogo(jogador))
@@ -182,6 +186,8 @@ class Partida:
         # pega os blind
         jogadores[self.small_blind].banca -= int(self.valor_inicial / 50)
         jogadores[self.big_blind].banca -= int(self.valor_inicial / 100)
+        pote = 0
+        vencedores = []
 
         # faz as viradas pelo numero de cartas na mesa
         for i in [0, 3, 4, 5]:
@@ -190,10 +196,54 @@ class Partida:
             self.historico_estado.append(f"cartas na mesa: {self.mesa}")
             rodada = Rodada(jogadores)
             jogadores = rodada.processar_rodada()
+            pote += rodada.pote_rodada
 
         self.historico_estado.append("fim de jogo")
 
+        if len(vencedores) < 1:
+            self.historico_estado.append("ERRO! Nenhum vencedor encontrado")
+        else:
+            self.historico_estado.append(
+                f"vencedores: {' '.join([vencedor.nome for vencedor in vencedores])}")
+
         return self.historico_estado
+
+    def distribuir_premio_jogadores(self) -> list[float]:
+        pote = self.pote_total
+        jogadores = self.jogadores.copy()
+        jogadores = sorted(jogadores, key=lambda jogador: jogador.aposta_total)
+        potes = list(set([jogador.aposta_total for jogador in jogadores]))
+
+        # Exemplo 4 jogadores, onde 2 all in ganharam e 2 empataram no pote final, como exemplo
+        # pote = 550
+        # 50 (all in) (pote max = 50*num_jogadores = 200 = a1)
+        # pote = 350
+        # 100 (all in) (pote max = 100*(num_jogadores-1)-a1 = 300 = a2)
+        # pote = 50
+        # 200, 200 (pote max = 200*(num_jogadores-2)-a1-a2 = 50; num_vencedores=2; pote_cada=25 = a3)
+        # pote = 0
+
+        while pote > 0:
+            pote_atual = potes.pop(0)
+            new_jogadores = []
+            maos = []
+            for jogador in jogadores:
+                mao = jogador.mao.copy()
+                mao = mao + self.mesa.copy()
+                maos += mao
+                if jogador.aposta_total > pote_atual:
+                    new_jogadores.append(jogador)
+            max_pote = pote_atual * len(new_jogadores)
+            val_pote = max(max_pote, pote)
+            pote -= val_pote
+
+            vencedores = self.get_vencedores(maos, jogadores)
+
+    def get_vencedores(self, maos: list[list[Carta]]) -> list[Jogador]:
+        indices_vitoriosos = []
+
+
+        return [self.jogadores[i] for i in indices_vitoriosos]
 
 
 def main():
