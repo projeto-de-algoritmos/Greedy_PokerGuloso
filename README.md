@@ -14,7 +14,7 @@ funciona.  -->
 
 Poker guloso: jogo de poker entre 2 algoritmos gulosos para ver qual heurística é melhor.
 Os arquivos `scriptA.py` e `scriptB.py` irão implementar a função `desistiu, aumentou fazer_jogada(estado)` 
-onde vai receber o estado do jogo (com as suas cartas) e retornará qual carta irá jogar.
+onde vai receber o estado do jogo (com as suas cartas) e retornará a jogada, que pode ser uma desistencia, aceitar aumento ou não aumentar nada.
 
 O JOGO É [TEXAS HOLD'EM](https://en.wikipedia.org/wiki/Texas_hold_%27em).
 
@@ -147,7 +147,7 @@ Em passos:
 | ------ | ------------------------------------------------------------------------------------------------------------------------- |
 | 1      | O inimigo faz todas as jogadas, e nos respondemos todas (dentro da medida do possível)                                    |
 | 2      | O mesmo do anterior, mas cada arma tem uma velocidade de derrota (tempo Xi para cada arma em X sem reposta causa derrota) |
-| 3      | O inimigo faz jogadas em todo turno, e todo turno nos fazemos a decisão de como tratar as jogadas em aberto               | -->
+| 3      | O inimigo faz jogadas em todo turno, e todo turno nos fazemos a decisão de como tratar as jogadas em aberto               | --> |
 
 ## Screenshots
 <!-- Adicione 3 ou mais screenshots do projeto em funcionamento. -->
