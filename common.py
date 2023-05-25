@@ -86,21 +86,9 @@ class CalculadoraDeVitoria:
     ordem_jogadas: list[function]
 
     def __init__(self):
-        ordem_cartas = ['A', 'K', 'Q', 'J', '9',
-                        '8', '7', '6', '5', '4', '3', '2']
-        ordem_jogadas = [
-            {
-                'verifica': self.royal_straight_flush,
-                'nome': "royal_straight_flush",
-            },
-            {
-                'verifica': self.royal_flush,
-                'nome': "royal_flush",
-            },
-            {
-                'verifica': self.royal_straight,
-                'nome': "royal_straight",
-            },
+        self.ordem_cartas = ['A', 'K', 'Q', 'J', '9',
+                             '8', '7', '6', '5', '4', '3', '2']
+        self.ordem_jogadas = [
             {
                 'verifica': self.straight_flush,
                 'nome': "straight_flush",
@@ -144,25 +132,54 @@ class CalculadoraDeVitoria:
         sumB = sum(maoB)
         return sumA > sumB
 
-    def get_maos_vencedoras(self, maos: list[list[Carta]], maos_do_jogador: list[list[Carta]]):
+    # recebe as maos (mesa + cartas do jogador) pra cada jogador
+    # retorna uma lista de vencedores (pelo menos 1) e uma lista de maos vencedoras
+    def get_maos_vencedoras(self,
+                            maos: list[list[Carta]]) ->\
+            tuple[list[int], list[list[Carta]]]:
+
         for mao in maos:
             mao = sorted(
                 mao, key=lambda carta: self.ordem_cartas.index(carta.valor))
 
         buckets = [[] for _ in range(len(self.ordem_jogadas))]
+        cartas = [[] for _ in range(len(self.ordem_jogadas))]
         for mao in maos:
-            for is_jogada in self.ordem_jogadas:
-                if is_jogada(mao):
-                    buckets.append(maos.index(mao))
+            i = 0
+            for jogada in self.ordem_jogadas:
+                atende_jogada, cartas = jogada(mao)
+                if atende_jogada:
+                    buckets[i].append(maos.index(mao))
+                    cartas[i].append(cartas)
+                i += 1
 
-    def royal_straight_flush(self, mao) -> tuple[bool, list[Carta]]:
-        pass
+        for bucket in buckets:
+            if len(bucket) > 0:
+                if len(bucket) == 1:
+                    return [bucket[0]], [maos[bucket[0]]]
 
-    def royal_flush(self, mao) -> tuple[bool, list[Carta]]:
-        pass
+                new_maos = []
+                bucket_index = buckets.index(bucket)
 
-    def royal_straight(self, mao) -> tuple[bool, list[Carta]]:
-        pass
+                for mao in bucket:
+                    mao_in_bucket_index = bucket.index(mao)
+                    new_maos.append(maos[mao].copy())
+
+                    # o valor das mãos não é definido pelas cartas ganhadoras
+                    # ou seja, vamos decidir pelo kicker
+                    for carta in cartas[bucket_index][mao_in_bucket_index]:
+                        new_maos[-1:].remove(carta)
+
+                high_cards = [self.high_card(maos[item])[1].valor
+                              for item in bucket]
+                highest = max(high_cards)
+                vencedores = []
+                for item in new_maos:
+                    if max(item) == highest:
+                        vencedores.append(bucket[new_maos.index(item)])
+                return vencedores, [maos[item] for item in vencedores]
+
+            raise Exception("ERRO! Não há vencedores! Isso é impossível")
 
     def straight_flush(self, mao) -> tuple[bool, list[Carta]]:
         is_straight, cartas_straight = self.straight(mao)
@@ -172,26 +189,25 @@ class CalculadoraDeVitoria:
         return False, None
 
     def four_of_a_kind(self, mao) -> tuple[bool, list[Carta]]:
-        pass
+        groups = self.__count_groups(mao)
+        if len(groups) > 0 and len(groups[0]) > 3:
+            return True, groups[0]
+        return False, None
 
     def full_house(self, mao) -> tuple[bool, list[Carta]]:
-        pass
+        groups = self.__count_groups(mao)
+        if len(groups) > 1 and len(groups[0]) > 2 and len(groups[1]) > 1:
+            return True, groups[0] + groups[1]
+        return False, None
 
     def flush(self, mao) -> tuple[bool, list[Carta]]:
-        last_valor = -1
         naipes = {'C': [], 'E': [], 'O': [], 'P': []}
         for carta in mao:
-            if last_valor == -1:
-                last_valor = carta.valor
-                continue
-            elif carta.valor == last_valor - 1:
-                sequence_groups[-1:].append(carta)
-            elif carta.valor < last_valor-1:
-                last_valor = carta.valor
-                sequence_groups.append([carta])
-        seqs = sorted(sequence_groups, key=lambda seq: len(seq)).reverse()
-        if len(seqs) > 0 and len(seqs[0]) >= 5:
-            return True, seqs[0]
+            naipe = carta.naipe
+            naipes[naipe].append(carta)
+        for naipe in naipes:
+            if len(naipes[naipe]) >= 5:
+                return True, naipes[naipe]
         return False, None
 
     def straight(self, mao) -> tuple[bool, list[Carta]]:
