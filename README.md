@@ -18,6 +18,10 @@ onde vai receber o estado do jogo (com as suas cartas) e retornará qual carta i
 
 Na pasta `estrategias` haverão diversas implementações para se testar.
 
+### Proximos passos
+
+- Implementar all-in
+
 <!-- O objetivo é investigar as condições que tornam ou não um problema em guloso. Vamos comparar diferentes modelos de problemas e analisar onde que uma solução gulosa pode se encaixar ou não, e qual ela é.
 
 Uma ideia lúdica para fazer isso será montar uma simulação de guerra estilo pedra papel e tesoura, onde existe "nosso exército" e o "exército deles". O exército deles usará (atacará usando) "armas" contra nós, e nós precisamos retornar (contratacar) cada ataque inimigo utilizando as "armas" que possuímos. Cada arma destroi um conjunto de outras armas:
