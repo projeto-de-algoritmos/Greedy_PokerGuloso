@@ -16,8 +16,8 @@ class Carta:
             self.naipe = naipe
             self.__set_valor(valor=valor, valor_i=valor_i)
         elif nome is not None:
-            valor = nome[0]
-            naipe = nome[1]
+            naipe = nome[0]
+            valor = nome[1:]
             self.naipe = naipe
             self.__set_valor(valor=valor, valor_i=valor_i)
         else:
@@ -32,8 +32,9 @@ class Carta:
             self.valor = self.__valor_int_to_str(valor_i)
 
     def __valor_to_int(self, valor: str):
-        if self.valor.isnumeric():
-            self.valor_i = int(self.valor)
+        if valor.isnumeric():
+            self.valor_i = int(valor)
+            return self.valor_i
         return {
             'J': 11,
             'Q': 12,
@@ -53,6 +54,12 @@ class Carta:
 
     def __repr__(self) -> str:
         return f"{self.naipe}{self.valor}"
+
+    def __gt__(self, other) -> bool:
+        return self.valor_i >= other.valor_i
+
+    def __lt__(self, other) -> bool:
+        return self.valor_i >= other.valor_i
 
 
 def faz_permutacao_cartas() -> list[Carta]:
@@ -86,7 +93,8 @@ class EstadoDoJogoParaJogador:
                  mao: list[Carta],
                  aposta_jogadores: list[int],
                  aposta_total_jogadores: list[int],
-                 banca_jogadores: list[int]):
+                 banca_jogadores: list[int],
+                 aposta_minima: int = None):
         self.mesa = mesa
         self.mao = mao
         self.aposta_jogadores = aposta_jogadores
@@ -97,7 +105,11 @@ class EstadoDoJogoParaJogador:
         self.precisa_aumentar = False
         for aposta in aposta_jogadores:
             if aposta > self.aposta_minima:
-                self.aposta_minima = aposta
+                if aposta_minima is None:
+                    self.aposta_minima = aposta
+                else:
+                    self.aposta_minima = aposta_minima
+
                 self.precisa_aumentar = True
 
         self.preco_de_ficar_no_jogo = aposta + max(self.aposta_total_jogadores)
@@ -108,48 +120,50 @@ class EstadoDoJogoParaJogador:
 class CalculadoraDeVitoria:
     ordem_cartas: list[str]
     ordem_jogadas: list[any]
+    __count_groups_memo: dict
 
     def __init__(self):
         self.ordem_cartas = ['A', 'K', 'Q', 'J', '9',
                              '8', '7', '6', '5', '4', '3', '2']
         self.ordem_jogadas = [
             {
-                'verifica': self.straight_flush,
+                'funcao_verificadora': self.straight_flush,
                 'nome': "straight_flush",
             },
             {
-                'verifica': self.four_of_a_kind,
+                'funcao_verificadora': self.four_of_a_kind,
                 'nome': "four_of_a_kind",
             },
             {
-                'verifica': self.full_house,
+                'funcao_verificadora': self.full_house,
                 'nome': "full_house",
             },
             {
-                'verifica': self.flush,
+                'funcao_verificadora': self.flush,
                 'nome': "flush",
             },
             {
-                'verifica': self.straight,
+                'funcao_verificadora': self.straight,
                 'nome': "straight",
             },
             {
-                'verifica': self.three_of_a_kind,
+                'funcao_verificadora': self.three_of_a_kind,
                 'nome': "three_of_a_kind",
             },
             {
-                'verifica': self.two_pairs,
+                'funcao_verificadora': self.two_pairs,
                 'nome': "two_pairs",
             },
             {
-                'verifica': self.pair,
+                'funcao_verificadora': self.pair,
                 'nome': "pair",
             },
             {
-                'verifica': self.high_card,
+                'funcao_verificadora': self.high_card,
                 'nome': "high_card",
             },
         ]
+        self.__count_groups_memo = {}
 
     def is_mao_A_maior(self, maoA: list[Carta], maoB: list[Carta]):
         sumA = sum(maoA)
@@ -162,19 +176,19 @@ class CalculadoraDeVitoria:
                             maos: list[list[Carta]]) ->\
             tuple[list[int], list[list[Carta]]]:
 
-        for mao in maos:
-            mao = sorted(
-                mao, key=lambda carta: self.ordem_cartas.index(carta.valor))
+        for mao_i in range(len(maos)):
+            maos[mao_i] = sorted(
+                maos[mao_i], key=lambda carta: carta.valor_i, reverse=True)
 
         buckets = [[] for _ in range(len(self.ordem_jogadas))]
         cartas = [[] for _ in range(len(self.ordem_jogadas))]
         for mao in maos:
             i = 0
             for jogada in self.ordem_jogadas:
-                atende_jogada, cartas = jogada(mao)
+                atende_jogada, c_cartas = jogada['funcao_verificadora'](mao)
                 if atende_jogada:
                     buckets[i].append(maos.index(mao))
-                    cartas[i].append(cartas)
+                    cartas[i].append(c_cartas)
                 i += 1
 
         for bucket in buckets:
@@ -182,28 +196,21 @@ class CalculadoraDeVitoria:
                 if len(bucket) == 1:
                     return [bucket[0]], [maos[bucket[0]]]
 
-                new_maos = []
-                bucket_index = buckets.index(bucket)
+                highest = 0
+                valores_de_maos = []
+                for bucket_i in bucket:
+                    val = sum([c.valor_i for c in maos[bucket_i]])
+                    highest = max(highest, val)
+                    valores_de_maos.append(val)
 
-                for mao in bucket:
-                    mao_in_bucket_index = bucket.index(mao)
-                    new_maos.append(maos[mao].copy())
-
-                    # o valor das mãos não é definido pelas cartas ganhadoras
-                    # ou seja, vamos decidir pelo kicker
-                    for carta in cartas[bucket_index][mao_in_bucket_index]:
-                        new_maos[-1:].remove(carta)
-
-                high_cards = [self.high_card(maos[item])[1].valor
-                              for item in bucket]
-                highest = max(high_cards)
                 vencedores = []
-                for item in new_maos:
-                    if max(item) == highest:
-                        vencedores.append(bucket[new_maos.index(item)])
+                for i in range(len(maos)):
+                    if valores_de_maos[i] == highest:
+                        vencedores.append(bucket[i])
+
                 return vencedores, [maos[item] for item in vencedores]
 
-            raise Exception("ERRO! Não há vencedores! Isso é impossível")
+        raise Exception("ERRO! Não há vencedores! Isso é impossível")
 
     def straight_flush(self, mao) -> tuple[bool, list[Carta]]:
         is_straight, cartas_straight = self.straight(mao)
@@ -239,14 +246,14 @@ class CalculadoraDeVitoria:
         sequence_groups = []
         for carta in mao:
             if last_valor == -1:
-                last_valor = carta.valor
+                last_valor = carta.valor_i
                 continue
-            elif carta.valor == last_valor - 1:
+            elif carta.valor_i == last_valor - 1:
                 sequence_groups[-1:].append(carta)
-            elif carta.valor < last_valor-1:
-                last_valor = carta.valor
+            elif carta.valor_i < last_valor-1:
+                last_valor = carta.valor_i
                 sequence_groups.append([carta])
-        seqs = sorted(sequence_groups, key=lambda seq: len(seq)).reverse()
+        seqs = sorted(sequence_groups, key=lambda seq: len(seq), reverse=True)
         if len(seqs) > 0 and len(seqs[0]) >= 5:
             return True, seqs[0]
         return False, None
@@ -274,15 +281,57 @@ class CalculadoraDeVitoria:
 
     # retorna grupos de cartas, sendo cada grupo uma lista de cartas
     # de igual valor. a resposta será ordenada do maior grupo para o menor
+
     def __count_groups(self, mao) -> list[list[Carta]]:
+        memo_nome = ''.join([c.__repr__() for c in mao])
+        if memo_nome in self.__count_groups_memo:
+            return self.__count_groups_memo[memo_nome]
         valor_last = -1
         grp_index = -1
         grupos = []
         for carta in mao:
-            if carta.valor == valor_last:
+            if carta.valor_i == valor_last:
                 grupos[grp_index].append(carta)
             else:
-                valor_last = carta.valor
+                valor_last = carta.valor_i
                 grp_index += 1
                 grupos.append([carta])
-        return sorted(grupos, key=lambda grupo: len(grupo[0])).reverse()
+        res = sorted(grupos, key=lambda grupo: len(grupo), reverse=True)
+        self.__count_groups_memo[memo_nome] = res
+        return res
+
+
+class CalculadoraChanceVitoria():
+    def __init__(self):
+        pass
+
+    # retorna valor entre [0.0, 1.0]
+    def get_chance_de_vitoria(self, mao: list[Carta]) -> float:
+        return 1.0
+
+
+if __name__ == "__main__":
+    calculador = CalculadoraDeVitoria()
+    maos, _ = calculador.get_maos_vencedoras(
+        [
+            [
+                Carta('CA'),
+                Carta('CQ'),
+                Carta('CJ'),
+                Carta('C10'),
+                Carta('C3'),
+                Carta('C2'),
+                Carta('C1'),
+            ],
+            [
+                Carta('EA'),
+                Carta('EQ'),
+                Carta('EJ'),
+                Carta('E10'),
+                Carta('E3'),
+                Carta('E2'),
+                Carta('E1'),
+            ]
+        ]
+    )
+    print(f"vencedor(es): {maos}")

@@ -7,12 +7,14 @@ from common import *
 class Jogador:
     __fazer_jogada: any
     cartas: list[Carta]
-    banca: int  # dinheiro do jogador
-    aposta_turno_atual: int
-    aposta_total: int
 
     nome: str
     indice: int
+
+    banca: int  # dinheiro do jogador
+    aposta_turno_atual: int
+    aposta_total: int
+    aposta_sem_disputa: int
 
     def __init__(self, fazer_jogada, cartas, banca, indice=0):
         self.__fazer_jogada = fazer_jogada
@@ -21,6 +23,7 @@ class Jogador:
 
         self.aposta_turno_atual = 0
         self.aposta_total = 0
+        self.aposta_sem_disputa = 0
 
         self.indice = indice
         self.nome = ['A', 'B', 'C', 'D', 'E', 'F'][indice]
@@ -28,13 +31,24 @@ class Jogador:
     # retorn a carta jogada, desistencia do jogo ou aumento da aposta
     # se aumento for zero, não tem aposta
     def fazer_jogada(self, estado: EstadoDoJogoParaJogador):
-        carta, desistiu, aumento = self.__fazer_jogada(estado)
-        if carta not in self.cartas:
-            raise ValueError("Carta não está na mão")
-        return carta, desistiu, aumento
+        desistiu, aumento = self.__fazer_jogada(estado)
+        return desistiu, aumento
 
     def limpar_turno(self):
         self.aposta_turno_atual = 0
+
+    def faz_aposta(self, valor: int, sem_disputa: bool = False):
+        if self.banca < valor:
+            raise Exception("não tem valor para fazer aposta")
+        self.banca -= valor
+        if sem_disputa:
+            self.aposta_sem_disputa += valor
+        else:
+            self.aposta_turno_atual += valor
+        self.aposta_total += valor
+
+    def get_aposta_voluntaria(self) -> int:
+        return self.aposta_total
 
 
 class Rodada:
@@ -43,6 +57,7 @@ class Rodada:
 
     valor_aumento: int
     pote_rodada: int
+    small_blind_value: int
 
     indice_jogador_aumento: int
     indice_jogador_atual: int
@@ -50,7 +65,9 @@ class Rodada:
     turnos_restantes: int
     turnos_jogados: int
 
-    def __init__(self, jogadores: list[Jogador], big_blind_index: int):
+    mesa: list[Carta]
+
+    def __init__(self, jogadores: list[Jogador], mesa: list[Carta]):
         self.jogadores = jogadores
         self.historico_estado = []
         self.indice_jogador_aumento = -1
@@ -59,12 +76,13 @@ class Rodada:
         self.turnos_restantes = len(self.jogadores)
         self.turnos_jogados = 0
         self.pote_rodada = 0
+        self.mesa = mesa
+        self.small_blind_value = None
 
     def remove_jogador(self, indice_jogador=-1, jogador=None):
         if jogador != None:
             indice_jogador = self.jogadores.index(jogador)
         self.jogadores.pop(indice_jogador)
-        self.apostas.pop(indice_jogador)
         self.turnos_restantes -= 1
 
     def jogador_falhou(self, jogador: Jogador, msg: str):
@@ -76,6 +94,8 @@ class Rodada:
 
     # toda vez que o jogador faz jogada falha, vamos assumir que ele desistiu por W.O.
     def processa_aposta(self, jogador, aumento):
+        if aumento == 0:
+            return
         i = self.jogadores.index(jogador)
 
         if self.indice_jogador_aumento == i:
@@ -130,6 +150,7 @@ class Rodada:
             self.processa_aposta(jogador, aumento)
 
             self.indice_jogador_atual = (i + 1) % len(self.jogadores)
+            self.turnos_jogados += 1
 
         return self.jogadores
 
@@ -137,12 +158,16 @@ class Rodada:
         return self.historico_estado
 
     def get_estado_jogo(self, jogador: Jogador) -> EstadoDoJogoParaJogador:
+        aposta_minima = None
+        if self.small_blind_value is not None:
+            aposta_minima = self.small_blind_value
         return EstadoDoJogoParaJogador(
             jogador.cartas,
             self.mesa,
             [jogador.aposta_turno_atual for jogador in self.jogadores],
             [jogador.aposta_total for jogador in self.jogadores],
             [jogador.banca for jogador in self.jogadores],
+            aposta_minima=aposta_minima
         )
 
 
@@ -170,8 +195,12 @@ class Partida:
         ]
         self.deck = cartas[4:]
         self.valor_inicial = valor_inicial
-        self.big_blind = big_blind
-        self.small_blind = small_blind
+
+        # como o numero de jogadores que ficam depois de quebrar pode ser diferente do atual
+        # nos calculamos o novo big_blind e small_blind no começo da partida play()
+        # por isso tem o -1 aqui
+        self.big_blind = big_blind - 1
+        self.small_blind = small_blind - 1
         self.calculadora = CalculadoraDeVitoria()
 
     def pega_carta_deck(self):
@@ -181,44 +210,56 @@ class Partida:
 
     def play(self):
         self.historico_estado.append("iniciando partida")
-        self.historico_estado.append("MESA: {self.mesa}")
+        self.historico_estado.append(f"MESA: {self.mesa}")
         self.historico_estado.append("processando jogadores")
 
         jogadores = self.jogadores.copy()
 
-        # pega os blind
-        jogadores[self.small_blind].banca -= int(self.valor_inicial / 50)
-        jogadores[self.big_blind].banca -= int(self.valor_inicial / 100)
-        pote = 0
+        self.small_blind = (self.small_blind + 1) % len(jogadores)
+        valor_small_blind = int(self.valor_inicial / 100)
+        jogadores[self.small_blind].faz_aposta(
+            valor_small_blind, sem_disputa=True)
+
+        self.big_blind = (self.big_blind + 1) % len(jogadores)
+        valor_big_blind = int(self.valor_inicial / 50)
+        jogadores[self.big_blind].faz_aposta(valor_big_blind, sem_disputa=True)
+
+        self.pote_total = valor_big_blind + valor_small_blind
+        self.pote_inicial = self.pote_total
 
         # faz as viradas pelo numero de cartas na mesa
         for i in [0, 3, 4, 5]:
             while len(self.mesa) < i:
                 self.pega_carta_deck()
             self.historico_estado.append(f"cartas na mesa: {self.mesa}")
-            rodada = Rodada(jogadores)
+
+            rodada = Rodada(jogadores, self.mesa)
             jogadores = rodada.processar_rodada()
+
             if len(jogadores) == 1:
                 self.historico_estado.append(
                     f"jogador {jogadores[0].nome} ganhou porque todos os outros desistiram")
-                vencedores = jogadores
                 break
-            pote += rodada.pote_rodada
+            self.pote_total += rodada.pote_rodada
+
+            for jogador in jogadores:
+                jogador.limpar_turno()
 
         self.historico_estado.append("fim de jogo")
 
-        self.distribuir_premio_jogadores(jogadores.copy())
+        self.distribuir_premio_jogadores(jogadores.copy(), valor_big_blind)
 
         return self.historico_estado
 
-    def distribuir_premio_jogadores(self, jogadores: list[Jogador]) -> list[float]:
+    def distribuir_premio_jogadores(self, jogadores: list[Jogador], big_blind: int) -> list[float]:
         pote_total = self.pote_total
-        jogadores = sorted(jogadores, key=lambda jogador: jogador.aposta_total)
+        jogadores = sorted(
+            jogadores, key=lambda jogador: jogador.get_aposta_voluntaria())
 
         # lista de potes por preço que cada jogador participante do pote pagou. Existe, ao menos, 1 pote.
         # Todos os jogadores que estão em potes menores que o pote máximos estão em all-in, e sua banca é necessariamente 0
         val_potes_pra_cada = list(
-            set([jogador.aposta_total for jogador in jogadores]))
+            set([max(big_blind, jogador.aposta_total) for jogador in jogadores]))
 
         # Exemplo 4 jogadores, onde 2 all in ganharam e 2 empataram no pote final, como exemplo
         # pote_total = 550
@@ -241,19 +282,18 @@ class Partida:
             maos = []
 
             for jogador in jogadores:
-                mao = jogador.mao.copy()
+                mao = jogador.cartas.copy()
                 mao = mao + self.mesa.copy()
-                maos += mao
+                maos.append(mao)
 
             vencedores, cartas = self.calculadora.get_maos_vencedoras(maos)
 
             self.historico_estado.append(
-                f"pote de {pote} vencido por jogador(es) {', '.join([jogadores[i] for i in vencedores])}")
+                f"pote de {pote} vencido por jogador(es) {', '.join([jogadores[i].nome for i in vencedores])}")
 
             total_desse_pote = pote * len(jogadores) - valor_distribuido
             if total_desse_pote > pote_total:
-                raise Exception("ERRO! Pote maior que o total?")
-
+                total_desse_pote = pote_total
             for vencedor_i in vencedores:
                 vencedor = jogadores[vencedor_i]
                 ganho = total_desse_pote / len(vencedores)
