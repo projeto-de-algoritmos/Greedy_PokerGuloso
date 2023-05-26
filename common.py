@@ -1,43 +1,67 @@
-import itertools
-from math import min
+import random
 
 
 class Carta:
     naipe: str
-    valor: int
+    valor: str
+    nome: str
+    valor_i: int
 
-    def __init__(self, naipe: str, valor: str):
-        self.naipe = naipe
-        self.valor = valor
+    # VALOR: 2, 3, 4, 5, 6, 7, 8, 9, 10, J = valete, Q = dama, K = rei, A = ás
+    # VALOR_I: 2...14
+    # NAIPE: C = copas, E = espadas, O = ouros, P = paus
+    # NOME: 3C = 3 de copas, KQ = rei de ouros...
+    def __init__(self, nome: str = None, naipe: str = None, valor: str = None, valor_i: int = None):
+        if naipe is not None and (valor is not None or valor_i is not None):
+            self.naipe = naipe
+            self.__set_valor(valor=valor, valor_i=valor_i)
+        elif nome is not None:
+            valor = nome[0]
+            naipe = nome[1]
+            self.naipe = naipe
+            self.__set_valor(valor=valor, valor_i=valor_i)
+        else:
+            raise Exception("Precisa de nome ou naipe e valor")
 
-    # C = copas, E = espadas, O = ouros, P = paus
-    # 3C = 3 de copas, KQ = rei de ouros...
-    def __init__(self, nome: str):
-        valor = nome[0]
-        naipe = nome[1]
-        self.naipe = naipe
-        self.valor = valor
+    def __set_valor(self, valor_i: int, valor: str):
+        if valor is not None:
+            self.valor = valor
+            self.valor_i = self.__valor_to_int(valor)
+        elif valor_i is not None:
+            self.valor_i = valor_i
+            self.valor = self.__valor_int_to_str(valor_i)
 
-    def __init__(self):
-        pass
+    def __valor_to_int(self, valor: str):
+        if self.valor.isnumeric():
+            self.valor_i = int(self.valor)
+        return {
+            'J': 11,
+            'Q': 12,
+            'K': 13,
+            'A': 14,
+        }[valor]
+
+    def __valor_int_to_str(self, valor_i: int):
+        if valor_i < 11:
+            return str(valor_i)
+        return {
+            11: 'J',
+            12: 'Q',
+            13: 'K',
+            14: 'A',
+        }[valor_i]
+
+    def __repr__(self) -> str:
+        return f"{self.naipe}{self.valor}"
 
 
 def faz_permutacao_cartas() -> list[Carta]:
     cartas = []
     for i in ['C', 'E', 'O', 'P']:
-        for j in range(2, 14):
-            if j < 10:
-                j = str(j)
-            elif j == 10:
-                j = 'J'
-            elif j == 11:
-                j = 'Q'
-            elif j == 12:
-                j = 'K'
-            elif j == 13:
-                j = 'A'
-            cartas.append(Carta(i, j))
-    return itertools.permutations(cartas)
+        for j in range(2, 15):
+            cartas.append(Carta(naipe=i, valor_i=j))
+    random.shuffle(cartas)
+    return cartas
 
 
 class EstadoDoJogoParaJogador:
@@ -83,7 +107,7 @@ class EstadoDoJogoParaJogador:
 
 class CalculadoraDeVitoria:
     ordem_cartas: list[str]
-    ordem_jogadas: list[function]
+    ordem_jogadas: list[any]
 
     def __init__(self):
         self.ordem_cartas = ['A', 'K', 'Q', 'J', '9',
