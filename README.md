@@ -25,17 +25,25 @@ Todas as cartas são representada como `f(naipe,valor) = "{naipe}{valor}"`, onde
 ## Screenshots
 <!-- Adicione 3 ou mais screenshots do projeto em funcionamento. -->
 
-Um jogo aleatório registrado no `log_jogos.json`:
+#### Um jogo aleatório registrado no `log_jogos.json`:
 
 ![](imgs/Screenshot%20from%202023-05-28%2016-20-04.png)
 
-A sequência de ações realizadas em um jogo específico:
+#### A sequência de ações realizadas em um jogo específico:
 
-![](imgs/Screenshot%20from%202023-05-28%2016-20-04.png)
+![](imgs/Screenshot%20from%202023-05-28%2016-45-31.png)
 
+Note como nenhum dos jogadores realizou nenhuma aposta. O jogo terminou com o pote que foram forçados e colocar no começo.
 
+#### Uma análise realizada sobre 1000 jogos
 
+![](imgs/Screenshot%20from%202023-05-28%2016-48-45.png)
 
+Note que:
+- Assim como a partida acima, nenhum jogador realizou nenhuma aposta nessas 1000 partidas, como baseline.
+- A carta que trouxe vitórias mais vezes foi a 4.
+- A maior quantidade de vitórias foi vencida por pares de cartas.
+- Houveram empates.
 
 ## Instalação 
 **Linguagem**: Python3<br>

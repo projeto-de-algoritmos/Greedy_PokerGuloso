@@ -329,7 +329,7 @@ class Partida:
                 item['cartas_do_vencedor'] = [c.__repr__()
                                               for c in item['cartas_do_vencedor']]
 
-            print(json.dumps(cv, indent=4))
+            print('condicao_vitoria: ', json.dumps(cv, indent=4))
 
             self.descritor_partida = {
                 'mesa': [c.__repr__() for c in self.mesa],
