@@ -40,9 +40,10 @@ Note como nenhum dos jogadores realizou nenhuma aposta. O jogo terminou com o po
 ![](imgs/Screenshot%20from%202023-05-28%2016-48-45.png)
 
 Note que:
-- Assim como a partida acima, nenhum jogador realizou nenhuma aposta nessas 1000 partidas, como baseline.
+- Assim como a partida na imagem anterior a essa, nenhum jogador realizou nenhuma aposta nessas 1000 partidas, como baseline para desenvolver heurísticas do jogo.
 - A carta que trouxe vitórias mais vezes foi a 4.
 - A maior quantidade de vitórias foi vencida por pares de cartas.
+- Vitórias com `4 of a kind` (4 cartas de mesmo valor) são extremamente raras.
 - Houveram empates.
 
 ## Instalação 
