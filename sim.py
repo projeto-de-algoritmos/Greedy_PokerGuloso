@@ -321,7 +321,15 @@ class Partida:
 
             self.historico_estado.append(
                 f"pote de {total_desse_pote} vencido por: {', '.join([jogadores[i].nome for i in vencedores])} com cartas {'| '.join([jogadores[j].__repr__() for j in vencedores])}")
-            print(condicao_vitoria)
+
+            cv = condicao_vitoria.copy()
+            cv = [item.copy() for item in cv]
+            for item in cv:
+                item['mao'] = [c.__repr__() for c in item['mao']]
+                item['cartas_do_vencedor'] = [c.__repr__()
+                                              for c in item['cartas_do_vencedor']]
+
+            print(json.dumps(cv, indent=4))
 
             self.descritor_partida = {
                 'mesa': [c.__repr__() for c in self.mesa],
@@ -346,7 +354,7 @@ def main():
     for i in range(1000):
         partida = Partida()
         historico_estado = partida.play()
-        print(historico_estado)
+        print(json.dumps(historico_estado, indent=4))
         jogos.append(partida.descritor_partida.copy())
 
     with open("log_jogos.json", "w") as f:

@@ -61,6 +61,17 @@ class Carta:
     def __lt__(self, other) -> bool:
         return self.valor_i >= other.valor_i
 
+    def to_json(self):
+        return {
+            'valor_i': self.valor_i,
+            'naipe': self.naipe,
+            'valor': self.valor,
+            'nome': self.nome,
+        }
+
+    def from_json(cls, json_data):
+        return cls(nome=json_data[0])
+
 
 def faz_permutacao_cartas() -> list[Carta]:
     cartas = []
@@ -188,8 +199,6 @@ class CalculadoraDeVitoria:
                 atende_jogada, c_cartas = jogada['funcao_verificadora'](mao)
                 if atende_jogada:
                     buckets[i].append(maos.index(mao))
-                    print("ON JOGADA: ", jogada['nome'])
-                    print("CARTAS = ", c_cartas)
                     cartas[i].append(c_cartas.copy())
                 i += 1
 
@@ -199,10 +208,6 @@ class CalculadoraDeVitoria:
             if len(bucket) > 0:
                 if len(bucket) == 1:
                     return [bucket[0]], [{'mao': maos[bucket[0]], 'jogada': tipo_vitoria}]
-
-                print("bucket with len > 1")
-                print("cards A: ", cartas[0])
-                print("cards B: ", cartas[1])
 
                 highest = 0
                 valores_de_maos = []
