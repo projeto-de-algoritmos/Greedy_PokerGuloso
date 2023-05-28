@@ -20,7 +20,7 @@ Este jogo segue as regras do [TEXAS HOLD'EM](https://en.wikipedia.org/wiki/Texas
 
 Na pasta `estrategias` haverão diversas implementações para se testar.
 
-Todas as cartas são representada como `f(naipe,valor) = "{naipe}{valor}"`, onde `naipe` pode ser `[E,O,P,C]` representando espadas, ouros, paus e copas. O valor pode ser `[A,K,Q,J,10,9,8,7,6,5,4,3,2]` represetando os valores (em ordem decrescente) das cartas do poker. Por exemplo, `E4` significa *4 de paus* ou `OQ` significa *dama de ouros*.
+Todas as cartas são representada como `f(naipe,valor) = "{naipe}{valor}"`, onde `naipe` pode ser `[E,O,P,C]` representando espadas, ouros, paus e copas. O `valor` pode ser `[A,K,Q,J,10,9,8,7,6,5,4,3,2]` represetando os valores (em ordem decrescente) das cartas do poker. Por exemplo, `E4` significa *4 de paus* ou `OQ` significa *dama de ouros*.
 
 ## Screenshots
 <!-- Adicione 3 ou mais screenshots do projeto em funcionamento. -->
