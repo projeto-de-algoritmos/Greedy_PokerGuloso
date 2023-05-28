@@ -320,7 +320,7 @@ class Partida:
             pote_total -= total_desse_pote
 
             self.historico_estado.append(
-                f"pote de {total_desse_pote} vencido por: {', '.join([jogadores[i].nome for i in vencedores])} com cartas {'| '.join([jogadores[j].__repr__() for j in vencedores])}")
+                f"pote de {total_desse_pote} vencido por: {', '.join([jogadores[i].nome for i in vencedores])} pelo {'| '.join([jogadores[j].__repr__() for j in vencedores])}")
 
             cv = condicao_vitoria.copy()
             cv = [item.copy() for item in cv]

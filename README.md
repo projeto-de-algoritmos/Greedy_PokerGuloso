@@ -33,7 +33,7 @@ Todas as cartas são representada como `f(naipe,valor) = "{naipe}{valor}"`, onde
 
 ![](imgs/Screenshot%20from%202023-05-28%2016-45-31.png)
 
-Note como nenhum dos jogadores realizou nenhuma aposta. O jogo terminou com o pote que foram forçados e colocar no começo.
+Note como nenhum dos jogadores realizou nenhuma aposta. O jogo terminou com o pote que foram forçados a colocar no começo.
 
 #### Uma análise realizada sobre 1000 jogos
 
