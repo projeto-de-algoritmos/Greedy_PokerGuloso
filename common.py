@@ -188,14 +188,21 @@ class CalculadoraDeVitoria:
                 atende_jogada, c_cartas = jogada['funcao_verificadora'](mao)
                 if atende_jogada:
                     buckets[i].append(maos.index(mao))
-                    cartas[i].append(c_cartas)
+                    print("ON JOGADA: ", jogada['nome'])
+                    print("CARTAS = ", c_cartas)
+                    cartas[i].append(c_cartas.copy())
                 i += 1
 
+        i = 0
         for bucket in buckets:
-            tipo_vitoria = self.ordem_jogadas[buckets.index(bucket)]['nome']
+            tipo_vitoria = self.ordem_jogadas[i]['nome']
             if len(bucket) > 0:
                 if len(bucket) == 1:
                     return [bucket[0]], [{'mao': maos[bucket[0]], 'jogada': tipo_vitoria}]
+
+                print("bucket with len > 1")
+                print("cards A: ", cartas[0])
+                print("cards B: ", cartas[1])
 
                 highest = 0
                 valores_de_maos = []
@@ -213,6 +220,7 @@ class CalculadoraDeVitoria:
                     {'mao': maos[item],
                      'jogada': tipo_vitoria,
                      } for item in vencedores]
+            i += 1
 
         raise Exception("ERRO! Não há vencedores! Isso é impossível")
 
@@ -281,7 +289,7 @@ class CalculadoraDeVitoria:
         return False, None
 
     def high_card(self, mao) -> tuple[bool, list[Carta]]:
-        return True, mao[0]
+        return True, [mao[0]]
 
     # retorna grupos de cartas, sendo cada grupo uma lista de cartas
     # de igual valor. a resposta será ordenada do maior grupo para o menor

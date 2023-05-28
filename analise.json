@@ -1,0 +1,1389 @@
+jogos: 1000 
+cartas vencedoras: {
+    "2": 187,
+    "4": 183,
+    "3": 176,
+    "8": 173,
+    "5": 162,
+    "7": 161,
+    "6": 141,
+    "J": 136,
+    "10": 133,
+    "9": 127,
+    "A": 122,
+    "K": 121,
+    "Q": 120
+}
+jogadas vencedoras: {
+    "pair": 416,
+    "two_pairs": 338,
+    "high_card": 70,
+    "three_of_a_kind": 65,
+    "flush": 42,
+    "full_house": 40
+}
+empates: [
+    {
+        "mesa": [
+            "P5",
+            "E9",
+            "P10",
+            "P9",
+            "C3"
+        ],
+        "jogadorA": [
+            "P3",
+            "O4"
+        ],
+        "jogadorB": [
+            "O2",
+            "O5"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "two_pairs",
+                "cartas": [
+                    "P10",
+                    "E9",
+                    "P9",
+                    "P5",
+                    "O4",
+                    "P3",
+                    "C3"
+                ]
+            },
+            {
+                "jogada": "two_pairs",
+                "cartas": [
+                    "P10",
+                    "E9",
+                    "P9",
+                    "O5",
+                    "P5",
+                    "C3",
+                    "O2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "C10",
+            "P10",
+            "CK",
+            "EA",
+            "C5"
+        ],
+        "jogadorA": [
+            "E4",
+            "C9"
+        ],
+        "jogadorB": [
+            "E9",
+            "P4"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EA",
+                    "CK",
+                    "C10",
+                    "P10",
+                    "C9",
+                    "C5",
+                    "E4"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EA",
+                    "CK",
+                    "C10",
+                    "P10",
+                    "E9",
+                    "C5",
+                    "P4"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "PJ",
+            "O2",
+            "PA",
+            "O3",
+            "OJ"
+        ],
+        "jogadorA": [
+            "EQ",
+            "P4"
+        ],
+        "jogadorB": [
+            "P7",
+            "E9"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "PA",
+                    "EQ",
+                    "PJ",
+                    "OJ",
+                    "P4",
+                    "O3",
+                    "O2"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "PA",
+                    "PJ",
+                    "OJ",
+                    "E9",
+                    "P7",
+                    "O3",
+                    "O2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "EK",
+            "EQ",
+            "O6",
+            "O8",
+            "E5"
+        ],
+        "jogadorA": [
+            "O10",
+            "E10"
+        ],
+        "jogadorB": [
+            "O7",
+            "OK"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EK",
+                    "EQ",
+                    "O10",
+                    "E10",
+                    "O8",
+                    "O6",
+                    "E5"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OK",
+                    "EK",
+                    "EQ",
+                    "O8",
+                    "O7",
+                    "O6",
+                    "E5"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "C4",
+            "P2",
+            "C10",
+            "CJ",
+            "O10"
+        ],
+        "jogadorA": [
+            "EJ",
+            "C2"
+        ],
+        "jogadorB": [
+            "P9",
+            "P4"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "two_pairs",
+                "cartas": [
+                    "EJ",
+                    "CJ",
+                    "C10",
+                    "O10",
+                    "C4",
+                    "C2",
+                    "P2"
+                ]
+            },
+            {
+                "jogada": "two_pairs",
+                "cartas": [
+                    "CJ",
+                    "C10",
+                    "O10",
+                    "P9",
+                    "P4",
+                    "C4",
+                    "P2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "CJ",
+            "CK",
+            "EK",
+            "PA",
+            "EJ"
+        ],
+        "jogadorA": [
+            "OJ",
+            "P4"
+        ],
+        "jogadorB": [
+            "PJ",
+            "C4"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "full_house",
+                "cartas": [
+                    "PA",
+                    "CK",
+                    "EK",
+                    "OJ",
+                    "CJ",
+                    "EJ",
+                    "P4"
+                ]
+            },
+            {
+                "jogada": "full_house",
+                "cartas": [
+                    "PA",
+                    "CK",
+                    "EK",
+                    "PJ",
+                    "CJ",
+                    "EJ",
+                    "C4"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "OK",
+            "CQ",
+            "EA",
+            "O2",
+            "C5"
+        ],
+        "jogadorA": [
+            "P10",
+            "EK"
+        ],
+        "jogadorB": [
+            "CA",
+            "O9"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EA",
+                    "EK",
+                    "OK",
+                    "CQ",
+                    "P10",
+                    "C5",
+                    "O2"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "CA",
+                    "EA",
+                    "OK",
+                    "CQ",
+                    "O9",
+                    "C5",
+                    "O2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "C2",
+            "PA",
+            "OK",
+            "PJ",
+            "O9"
+        ],
+        "jogadorA": [
+            "C3",
+            "EJ"
+        ],
+        "jogadorB": [
+            "O2",
+            "EQ"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "PA",
+                    "OK",
+                    "EJ",
+                    "PJ",
+                    "O9",
+                    "C3",
+                    "C2"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "PA",
+                    "OK",
+                    "EQ",
+                    "PJ",
+                    "O9",
+                    "O2",
+                    "C2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "CK",
+            "O6",
+            "CJ",
+            "P4",
+            "O3"
+        ],
+        "jogadorA": [
+            "PQ",
+            "C4"
+        ],
+        "jogadorB": [
+            "C10",
+            "E6"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "CK",
+                    "PQ",
+                    "CJ",
+                    "O6",
+                    "C4",
+                    "P4",
+                    "O3"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "CK",
+                    "CJ",
+                    "C10",
+                    "E6",
+                    "O6",
+                    "P4",
+                    "O3"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "C8",
+            "EK",
+            "EQ",
+            "CK",
+            "OJ"
+        ],
+        "jogadorA": [
+            "E9",
+            "C7"
+        ],
+        "jogadorB": [
+            "O7",
+            "P9"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EK",
+                    "CK",
+                    "EQ",
+                    "OJ",
+                    "E9",
+                    "C8",
+                    "C7"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EK",
+                    "CK",
+                    "EQ",
+                    "OJ",
+                    "P9",
+                    "C8",
+                    "O7"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "EJ",
+            "C6",
+            "C10",
+            "C9",
+            "E9"
+        ],
+        "jogadorA": [
+            "E8",
+            "O8"
+        ],
+        "jogadorB": [
+            "O10",
+            "P6"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "two_pairs",
+                "cartas": [
+                    "EJ",
+                    "C10",
+                    "C9",
+                    "E9",
+                    "E8",
+                    "O8",
+                    "C6"
+                ]
+            },
+            {
+                "jogada": "two_pairs",
+                "cartas": [
+                    "EJ",
+                    "O10",
+                    "C10",
+                    "C9",
+                    "E9",
+                    "P6",
+                    "C6"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "P10",
+            "OA",
+            "O3",
+            "E7",
+            "P3"
+        ],
+        "jogadorA": [
+            "C5",
+            "E9"
+        ],
+        "jogadorB": [
+            "OQ",
+            "C2"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OA",
+                    "P10",
+                    "E9",
+                    "E7",
+                    "C5",
+                    "O3",
+                    "P3"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OA",
+                    "OQ",
+                    "P10",
+                    "E7",
+                    "O3",
+                    "P3",
+                    "C2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "E4",
+            "CQ",
+            "P9",
+            "E8",
+            "P10"
+        ],
+        "jogadorA": [
+            "EQ",
+            "E3"
+        ],
+        "jogadorB": [
+            "O4",
+            "OJ"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EQ",
+                    "CQ",
+                    "P10",
+                    "P9",
+                    "E8",
+                    "E4",
+                    "E3"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "CQ",
+                    "OJ",
+                    "P10",
+                    "P9",
+                    "E8",
+                    "O4",
+                    "E4"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "E2",
+            "C5",
+            "P4",
+            "C7",
+            "E10"
+        ],
+        "jogadorA": [
+            "CA",
+            "O6"
+        ],
+        "jogadorB": [
+            "PA",
+            "C6"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "high_card",
+                "cartas": [
+                    "CA",
+                    "E10",
+                    "C7",
+                    "O6",
+                    "C5",
+                    "P4",
+                    "E2"
+                ]
+            },
+            {
+                "jogada": "high_card",
+                "cartas": [
+                    "PA",
+                    "E10",
+                    "C7",
+                    "C6",
+                    "C5",
+                    "P4",
+                    "E2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "E7",
+            "P7",
+            "P10",
+            "O8",
+            "P9"
+        ],
+        "jogadorA": [
+            "C6",
+            "PA"
+        ],
+        "jogadorB": [
+            "E6",
+            "CA"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "PA",
+                    "P10",
+                    "P9",
+                    "O8",
+                    "E7",
+                    "P7",
+                    "C6"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "CA",
+                    "P10",
+                    "P9",
+                    "O8",
+                    "E7",
+                    "P7",
+                    "E6"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "O4",
+            "C5",
+            "P5",
+            "P6",
+            "EK"
+        ],
+        "jogadorA": [
+            "C10",
+            "E7"
+        ],
+        "jogadorB": [
+            "C8",
+            "O9"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EK",
+                    "C10",
+                    "E7",
+                    "P6",
+                    "C5",
+                    "P5",
+                    "O4"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EK",
+                    "O9",
+                    "C8",
+                    "P6",
+                    "C5",
+                    "P5",
+                    "O4"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "O7",
+            "C2",
+            "EQ",
+            "C5",
+            "C3"
+        ],
+        "jogadorA": [
+            "EK",
+            "O3"
+        ],
+        "jogadorB": [
+            "C9",
+            "P7"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EK",
+                    "EQ",
+                    "O7",
+                    "C5",
+                    "O3",
+                    "C3",
+                    "C2"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EQ",
+                    "C9",
+                    "P7",
+                    "O7",
+                    "C5",
+                    "C3",
+                    "C2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "E9",
+            "O6",
+            "CJ",
+            "O10",
+            "C6"
+        ],
+        "jogadorA": [
+            "PK",
+            "P3"
+        ],
+        "jogadorB": [
+            "O3",
+            "OK"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "PK",
+                    "CJ",
+                    "O10",
+                    "E9",
+                    "O6",
+                    "C6",
+                    "P3"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OK",
+                    "CJ",
+                    "O10",
+                    "E9",
+                    "O6",
+                    "C6",
+                    "O3"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "C6",
+            "OJ",
+            "E4",
+            "P5",
+            "E10"
+        ],
+        "jogadorA": [
+            "E2",
+            "O5"
+        ],
+        "jogadorB": [
+            "C5",
+            "P2"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OJ",
+                    "E10",
+                    "C6",
+                    "O5",
+                    "P5",
+                    "E4",
+                    "E2"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OJ",
+                    "E10",
+                    "C6",
+                    "C5",
+                    "P5",
+                    "E4",
+                    "P2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "E10",
+            "EA",
+            "E8",
+            "C6",
+            "E9"
+        ],
+        "jogadorA": [
+            "C8",
+            "O5"
+        ],
+        "jogadorB": [
+            "P7",
+            "O6"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EA",
+                    "E10",
+                    "E9",
+                    "C8",
+                    "E8",
+                    "C6",
+                    "O5"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EA",
+                    "E10",
+                    "E9",
+                    "E8",
+                    "P7",
+                    "O6",
+                    "C6"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "C6",
+            "E4",
+            "E2",
+            "C3",
+            "P4"
+        ],
+        "jogadorA": [
+            "CJ",
+            "O10"
+        ],
+        "jogadorB": [
+            "OQ",
+            "C9"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "CJ",
+                    "O10",
+                    "C6",
+                    "E4",
+                    "P4",
+                    "C3",
+                    "E2"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OQ",
+                    "C9",
+                    "C6",
+                    "E4",
+                    "P4",
+                    "C3",
+                    "E2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "O9",
+            "P2",
+            "O8",
+            "P10",
+            "E9"
+        ],
+        "jogadorA": [
+            "E7",
+            "EQ"
+        ],
+        "jogadorB": [
+            "C7",
+            "CQ"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EQ",
+                    "P10",
+                    "O9",
+                    "E9",
+                    "O8",
+                    "E7",
+                    "P2"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "CQ",
+                    "P10",
+                    "O9",
+                    "E9",
+                    "O8",
+                    "C7",
+                    "P2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "PQ",
+            "E10",
+            "E2",
+            "O2",
+            "P9"
+        ],
+        "jogadorA": [
+            "P8",
+            "PA"
+        ],
+        "jogadorB": [
+            "OA",
+            "C8"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "PA",
+                    "PQ",
+                    "E10",
+                    "P9",
+                    "P8",
+                    "E2",
+                    "O2"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OA",
+                    "PQ",
+                    "E10",
+                    "P9",
+                    "C8",
+                    "E2",
+                    "O2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "E10",
+            "O9",
+            "OK",
+            "C8",
+            "C3"
+        ],
+        "jogadorA": [
+            "P9",
+            "C2"
+        ],
+        "jogadorB": [
+            "O2",
+            "E9"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OK",
+                    "E10",
+                    "P9",
+                    "O9",
+                    "C8",
+                    "C3",
+                    "C2"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OK",
+                    "E10",
+                    "E9",
+                    "O9",
+                    "C8",
+                    "C3",
+                    "O2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "P4",
+            "O9",
+            "E7",
+            "CJ",
+            "OA"
+        ],
+        "jogadorA": [
+            "P3",
+            "OK"
+        ],
+        "jogadorB": [
+            "P10",
+            "E6"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "high_card",
+                "cartas": [
+                    "OA",
+                    "OK",
+                    "CJ",
+                    "O9",
+                    "E7",
+                    "P4",
+                    "P3"
+                ]
+            },
+            {
+                "jogada": "high_card",
+                "cartas": [
+                    "OA",
+                    "CJ",
+                    "P10",
+                    "O9",
+                    "E7",
+                    "E6",
+                    "P4"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "PA",
+            "PQ",
+            "P8",
+            "CK",
+            "C7"
+        ],
+        "jogadorA": [
+            "C6",
+            "P3"
+        ],
+        "jogadorB": [
+            "P5",
+            "O4"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "high_card",
+                "cartas": [
+                    "PA",
+                    "CK",
+                    "PQ",
+                    "P8",
+                    "C7",
+                    "C6",
+                    "P3"
+                ]
+            },
+            {
+                "jogada": "high_card",
+                "cartas": [
+                    "PA",
+                    "CK",
+                    "PQ",
+                    "P8",
+                    "C7",
+                    "P5",
+                    "O4"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "PQ",
+            "E6",
+            "E2",
+            "OA",
+            "P9"
+        ],
+        "jogadorA": [
+            "CQ",
+            "C5"
+        ],
+        "jogadorB": [
+            "C6",
+            "OJ"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OA",
+                    "CQ",
+                    "PQ",
+                    "P9",
+                    "E6",
+                    "C5",
+                    "E2"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "OA",
+                    "PQ",
+                    "OJ",
+                    "P9",
+                    "C6",
+                    "E6",
+                    "E2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "C7",
+            "C2",
+            "EJ",
+            "E6",
+            "C5"
+        ],
+        "jogadorA": [
+            "CA",
+            "O3"
+        ],
+        "jogadorB": [
+            "C9",
+            "P8"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "high_card",
+                "cartas": [
+                    "CA",
+                    "EJ",
+                    "C7",
+                    "E6",
+                    "C5",
+                    "O3",
+                    "C2"
+                ]
+            },
+            {
+                "jogada": "high_card",
+                "cartas": [
+                    "EJ",
+                    "C9",
+                    "P8",
+                    "C7",
+                    "E6",
+                    "C5",
+                    "C2"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    },
+    {
+        "mesa": [
+            "EJ",
+            "O6",
+            "EK",
+            "C8",
+            "OJ"
+        ],
+        "jogadorA": [
+            "CQ",
+            "O9"
+        ],
+        "jogadorB": [
+            "EA",
+            "C7"
+        ],
+        "condicao_vitoria": [
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EK",
+                    "CQ",
+                    "EJ",
+                    "OJ",
+                    "O9",
+                    "C8",
+                    "O6"
+                ]
+            },
+            {
+                "jogada": "pair",
+                "cartas": [
+                    "EA",
+                    "EK",
+                    "EJ",
+                    "OJ",
+                    "C8",
+                    "C7",
+                    "O6"
+                ]
+            }
+        ],
+        "vencedor": [
+            "B",
+            "A"
+        ]
+    }
+]

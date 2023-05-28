@@ -302,6 +302,11 @@ class Partida:
 
             vencedores, condicao_vitoria = self.calculadora.get_maos_vencedoras(
                 maos)
+            i = 0
+            for vencedor_i in vencedores:
+                condicao_vitoria[i]['cartas_do_vencedor'] = jogadores[vencedor_i].cartas.copy(
+                )
+                i += 1
 
             total_desse_pote = pote * len(jogadores) - valor_distribuido
             if total_desse_pote > pote_total:
@@ -325,7 +330,8 @@ class Partida:
                 'condicao_vitoria': [
                     {
                         'jogada': condicao_vitoria[v_i]['jogada'],
-                        'cartas': [c.__repr__() for c in condicao_vitoria[v_i]['mao']]
+                        'cartas': [c.__repr__() for c in condicao_vitoria[v_i]['mao']],
+                        'cartas_jogador': [c.__repr__() for c in condicao_vitoria[v_i]['cartas_do_vencedor']]
                     }for v_i in range(len(vencedores))
                 ],
                 'vencedor': [jogadores[j].nome for j in vencedores],
