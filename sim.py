@@ -1,3 +1,5 @@
+import subprocess
+import time
 import json
 from scriptA import fazer_jogada as fazer_jogadaA
 from scriptB import fazer_jogada as fazer_jogadaB
@@ -49,6 +51,9 @@ class Jogador:
 
     def get_aposta_voluntaria(self) -> int:
         return self.aposta_total
+
+    def __repr__(self) -> str:
+        return f"Jogador {self.nome} ($ {self.banca}) ({' '.join([c.__repr__() for c in self.cartas])})"
 
 
 class Rodada:
@@ -184,6 +189,8 @@ class Partida:
 
     calculadora: CalculadoraDeVitoria
 
+    descritor_partida: dict
+
     def __init__(self, valor_inicial: int = 1000, big_blind: int = 0, small_blind: int = 1):
         self.historico_estado = []
         self.mesa = []
@@ -202,6 +209,7 @@ class Partida:
         self.big_blind = big_blind - 1
         self.small_blind = small_blind - 1
         self.calculadora = CalculadoraDeVitoria()
+        self.descritor_partida = {}
 
     def pega_carta_deck(self):
         self.deck, carta_nova = self.deck[1:], self.deck[0]
@@ -210,10 +218,16 @@ class Partida:
 
     def play(self):
         self.historico_estado.append("iniciando partida")
-        self.historico_estado.append(f"MESA: {self.mesa}")
-        self.historico_estado.append("processando jogadores")
 
         jogadores = self.jogadores.copy()
+
+        self.historico_estado.append(
+            f"MESA: {', '.join([c.__repr__() for c in self.mesa])}")
+        self.historico_estado.append(
+            f"JOGADOR A: {', '.join([c.__repr__() for c in jogadores[0].cartas])}")
+        self.historico_estado.append(
+            f"JOGADOR B: {', '.join([c.__repr__() for c in jogadores[1].cartas])}")
+        self.historico_estado.append("processando jogadores")
 
         self.small_blind = (self.small_blind + 1) % len(jogadores)
         valor_small_blind = int(self.valor_inicial / 100)
@@ -286,10 +300,8 @@ class Partida:
                 mao = mao + self.mesa.copy()
                 maos.append(mao)
 
-            vencedores, cartas = self.calculadora.get_maos_vencedoras(maos)
-
-            self.historico_estado.append(
-                f"pote de {pote} vencido por jogador(es) {', '.join([jogadores[i].nome for i in vencedores])}")
+            vencedores, condicao_vitoria = self.calculadora.get_maos_vencedoras(
+                maos)
 
             total_desse_pote = pote * len(jogadores) - valor_distribuido
             if total_desse_pote > pote_total:
@@ -302,15 +314,40 @@ class Partida:
 
             pote_total -= total_desse_pote
 
+            self.historico_estado.append(
+                f"pote de {total_desse_pote} vencido por: {', '.join([jogadores[i].nome for i in vencedores])} com cartas {'| '.join([jogadores[j].__repr__() for j in vencedores])}")
+            print(condicao_vitoria)
+
+            self.descritor_partida = {
+                'mesa': [c.__repr__() for c in self.mesa],
+                'jogadorA': [c.__repr__() for c in jogadores[0].cartas],
+                'jogadorB': [c.__repr__() for c in jogadores[1].cartas],
+                'condicao_vitoria': [
+                    {
+                        'jogada': condicao_vitoria[v_i]['jogada'],
+                        'cartas': [c.__repr__() for c in condicao_vitoria[v_i]['mao']]
+                    }for v_i in range(len(vencedores))
+                ],
+                'vencedor': [jogadores[j].nome for j in vencedores],
+            }
+
             while len(jogadores) > 0 and jogadores[0].aposta_total == pote:
                 jogadores.pop(0)
 
 
 def main():
-    while True:
+    jogos = []
+    for i in range(1000):
         partida = Partida()
         historico_estado = partida.play()
         print(historico_estado)
+        jogos.append(partida.descritor_partida.copy())
+
+    with open("log_jogos.json", "w") as f:
+        f.write(json.dumps({'jogos': jogos}, indent=2) + "\n")
+
+    timenow = time.strftime("%Y%m%d%H%M%S")
+    subprocess.run(["cp", "log_jogos.json", f"logs/log_jogos_{timenow}.json"])
 
 
 if __name__ == "__main__":

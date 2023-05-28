@@ -174,7 +174,7 @@ class CalculadoraDeVitoria:
     # retorna uma lista de vencedores (pelo menos 1) e uma lista de maos vencedoras
     def get_maos_vencedoras(self,
                             maos: list[list[Carta]]) ->\
-            tuple[list[int], list[list[Carta]]]:
+            tuple[list[int], list[dict]]:
 
         for mao_i in range(len(maos)):
             maos[mao_i] = sorted(
@@ -192,9 +192,10 @@ class CalculadoraDeVitoria:
                 i += 1
 
         for bucket in buckets:
+            tipo_vitoria = self.ordem_jogadas[buckets.index(bucket)]['nome']
             if len(bucket) > 0:
                 if len(bucket) == 1:
-                    return [bucket[0]], [maos[bucket[0]]]
+                    return [bucket[0]], [{'mao': maos[bucket[0]], 'jogada': tipo_vitoria}]
 
                 highest = 0
                 valores_de_maos = []
@@ -208,7 +209,10 @@ class CalculadoraDeVitoria:
                     if valores_de_maos[i] == highest:
                         vencedores.append(bucket[i])
 
-                return vencedores, [maos[item] for item in vencedores]
+                return vencedores, [
+                    {'mao': maos[item],
+                     'jogada': tipo_vitoria,
+                     } for item in vencedores]
 
         raise Exception("ERRO! Não há vencedores! Isso é impossível")
 
