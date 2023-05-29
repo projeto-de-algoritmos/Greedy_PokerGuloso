@@ -60,14 +60,14 @@ class Rodada:
     jogadores: list[Jogador]
     historico_estado: list[str]
 
-    valor_aumento: int
+    valor_necessario: int
     pote_rodada: int
     small_blind_value: int
 
     indice_jogador_aumento: int
     indice_jogador_atual: int
 
-    turnos_restantes: int
+    turnos_totais: int
     turnos_jogados: int
 
     mesa: list[Carta]
@@ -76,9 +76,9 @@ class Rodada:
         self.jogadores = jogadores
         self.historico_estado = []
         self.indice_jogador_aumento = -1
-        self.valor_aumento = -1
+        self.valor_necessario = 0
         self.indice_jogador_atual = 0
-        self.turnos_restantes = len(self.jogadores)
+        self.turnos_totais = len(self.jogadores)
         self.turnos_jogados = 0
         self.pote_rodada = 0
         self.mesa = mesa
@@ -88,7 +88,7 @@ class Rodada:
         if jogador != None:
             indice_jogador = self.jogadores.index(jogador)
         self.jogadores.pop(indice_jogador)
-        self.turnos_restantes -= 1
+        self.turnos_totais -= 1
 
     def jogador_falhou(self, jogador: Jogador, msg: str):
         self.historico_estado.append(f"ERRO! jogador {jogador.nome} {msg}")
@@ -99,54 +99,67 @@ class Rodada:
 
     # toda vez que o jogador faz jogada falha, vamos assumir que ele desistiu por W.O.
     def processa_aposta(self, jogador, aumento):
-        if aumento == 0 and self.valor_aumento <= 0:
+        if self.valor_necessario == 0 and aumento == 0:
+            # jogador nao apostou nem precisa apostar
             return
-        i = self.jogadores.index(jogador)
 
-        if self.indice_jogador_aumento == i:
-            self.jogador_falhou(
-                jogador, f"apostou duas vezes")
+        valor_que_falta = max(self.valor_necessario -
+                              jogador.aposta_turno_atual, 0)
+        aposta_total = jogador.aposta_turno_atual + aumento
 
-        valor_adicionado = aumento - jogador.aposta_turno_atual
-        if valor_adicionado > jogador.banca:
+        if aumento < valor_que_falta:
             self.log_jogador(
-                jogador, f"apostou {aumento} mas so tem {jogador.banca} na banca. valor_adicionado: {valor_adicionado}")
+                jogador, f"apostou {aumento} mas so tem {jogador.banca} na banca. valor_necessario: {self.valor_necessario} valor que falta pra esse jogador {valor_que_falta}")
+
             if aumento == jogador.banca:
-                self.log_jogador(
-                    jogador, f"deu all in")
+                self.iguala(jogador, aumento)
             else:
                 self.jogador_falhou(
-                    jogador, f"nao tem dinheiro para fazer aposta desejada")
+                    jogador, f"fez aposta menor do que deveria, saiu do jogo")
 
-        if aumento < self.valor_aumento:
-            self.jogador_falhou(
-                jogador, f"apostou menos que o anterior")
-
-        if aumento == self.valor_aumento:
+        elif aumento == valor_que_falta:
             self.historico_estado.append(
                 f"jogador {jogador.nome} igualou a aposta {aumento}")
 
-        if aumento > self.valor_aumento:
-            if self.valor_aumento * 2 > aumento:
-                self.jogador_falhou(
-                    jogador, f"apostou menos que o dobro da aposta atual")
+        elif aumento > valor_que_falta:
+            if self.valor_necessario * 2 > aposta_total:
+                self.historico_estado.append(
+                    jogador, f"apostou ({aumento}) menos que o dobro da aposta atual (valor total: {self.valor_necessario} e o que falta pro jogador botar era {valor_que_falta} totalizando uma aposta de {aposta_total}), assumiremos que ele igualou a jogada")
+                self.iguala(jogador)
 
-            self.indice_jogador_aumento = i
-            self.valor_aumento = aumento
-            self.turnos_restantes += len(self.jogadores) - \
-                self.turnos_restantes + self.turnos_jogados
-            self.log_jogador(
-                jogador, f"aumentou para {aumento}")
+            self.aumenta(jogador, aumento)
 
-        jogador.aposta_turno_atual += valor_adicionado
-        jogador.aposta_total += valor_adicionado
-        self.pote_rodada += valor_adicionado
+        jogador.aposta_turno_atual += aumento
+        jogador.aposta_total += aumento
+        self.pote_rodada += aumento
+
+    def aumenta(self, jogador: Jogador, aumento):
+        if aumento > jogador.banca:
+            self.jogador_falhou(
+                jogador, f"nao tem dinheiro para igualar aposta")
+
+        self.valor_necessario = max(
+            aumento + jogador.aposta_turno_atual, self.valor_necessario)
+        self.turnos_totais += len(self.jogadores) - \
+            self.turnos_totais + self.turnos_jogados
+        jogador.banca -= aumento
+        self.log_jogador(
+            jogador, f"aumentou para {self.valor_necessario}")
+
+    def iguala(self, jogador, aumento):
+        if aumento > jogador.banca:
+            self.jogador_falhou(
+                jogador, f"nao tem dinheiro para igualar aposta")
+
+        jogador.banca -= aumento
+        self.log_jogador(
+            jogador, f"igualou aposta {self.valor_necessario} ao adicionar {aumento} sendo que ele ja tinha apostado {jogador.aposta_turno_atual}")
 
     # retorna os jogadores que ainda estão no jogo
     def processar_rodada(self):
         self.historico_estado.append("comecando rodada")
 
-        while self.turnos_jogados < self.turnos_restantes:
+        while self.turnos_jogados < self.turnos_totais:
             i = self.indice_jogador_atual
             jogador = self.jogadores[i]
 
@@ -303,7 +316,11 @@ class Partida:
 
         for pote in val_potes_pra_cada:
             if len(jogadores) == 0:
-                raise Exception("ERRO! Pote sem vencedor??")
+                raise Exception("ERRO! Pote sem jogador")
+            total_desse_pote = pote * len(jogadores) - valor_distribuido
+            if total_desse_pote < 0:
+                break
+
             maos = []
 
             for jogador in jogadores:
@@ -319,7 +336,6 @@ class Partida:
                 )
                 i += 1
 
-            total_desse_pote = pote * len(jogadores) - valor_distribuido
             if total_desse_pote > pote_total:
                 total_desse_pote = pote_total
             for vencedor_i in vencedores:
