@@ -224,6 +224,7 @@ class Partida:
     valor_inicial: int
     big_blind: int
     small_blind: int
+    jogadores: list[Jogador] | None
 
     calculadora: CalculadoraDeVitoria
 
@@ -235,12 +236,21 @@ class Partida:
         self.banca = 0
         seed = random.randint(0, 1000000)
         cartas = faz_permutacao_cartas(seed)
-        self.jogadores = [
-            Jogador(fazer_jogadaA, cartas[0:2], valor_inicial, 0),
-            Jogador(fazer_jogadaB, cartas[2:4], valor_inicial, 1),
-        ]
         self.deck = cartas[4:]
         self.valor_inicial = valor_inicial
+
+        if jogadores is None or len(jogadores) == 0:
+            self.jogadores = [
+                Jogador(fazer_jogadaA, cartas[0:2], valor_inicial, 0),
+                Jogador(fazer_jogadaB, cartas[2:4], valor_inicial, 1),
+            ]
+        else:
+            self.jogadores = jogadores
+
+        for jogador in self.jogadores:
+            i = self.jogadores.index(jogador)
+            jogador.banca = valor_inicial
+            jogador.cartas = cartas[(i*2):(i*2 + 2)]
 
         # como o numero de jogadores que ficam depois de quebrar pode ser diferente do atual
         # nos calculamos o novo big_blind e small_blind no começo da partida play()
@@ -249,17 +259,6 @@ class Partida:
         self.small_blind = (small_blind - 1 + seed) % len(self.jogadores)
         self.calculadora = CalculadoraDeVitoria()
         self.descritor_partida = {}
-
-        if jogadores is None or len(jogadores) == 0:
-            self.jogadores = [
-                Jogador(fazer_jogadaA, cartas[0:2], valor_inicial, 0),
-                Jogador(fazer_jogadaB, cartas[2:4], valor_inicial, 1),
-            ]
-
-        for jogador in self.jogadores:
-            i = self.jogadores.index(jogador)
-            jogador.banca = valor_inicial
-            jogador.cartas = cartas[(i*2):(i*2 + 2)]
 
     def pega_carta_deck(self):
         self.deck, carta_nova = self.deck[1:], self.deck[0]

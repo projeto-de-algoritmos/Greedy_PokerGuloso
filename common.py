@@ -183,8 +183,8 @@ class CalculadoraDeVitoria:
         self.__count_groups_memo = {}
 
     def is_mao_A_maior(self, maoA: list[Carta], maoB: list[Carta]):
-        sumA = sum(maoA)
-        sumB = sum(maoB)
+        sumA = sum([carta.valor_i for carta in maoA])
+        sumB = sum([carta.valor_i for carta in maoB])
         return sumA > sumB
 
     def get_buckets(self, maos: list[list[Carta]]):
