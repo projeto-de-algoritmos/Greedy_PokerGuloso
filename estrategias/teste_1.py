@@ -1,25 +1,23 @@
 from common import *
 
-CUTOFF = 0.7
-
-# tenta calcular a maior vantagem possível que eu tenho e dá all-in caso
-# seja maior que um certo valor
-# desiste caso o inimigo aposte algo e nos nao temos cartas
-
 
 def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
     mao_completa = estado.mesa + estado.mao
     buckets = CalculadoraDeVitoria(
     ).get_labeled_buckets([mao_completa])
-    nao_desiste = False
+
     for bucket in buckets:
         if len(bucket['cartas']) > 0:
+            # alguem so pode ganhar de mim com essa mao atual SE
+            # - ele estiver em algum bucket acima no final
+            # - ele tiver no mesmo bucket que eu, mas com uma carta maior
 
-            # eu tenho um vantagem injusta?
-            # ou seja, eu tenho algum carta que me faz ganhar com facilidade? tipo, tenho uma carta que faz uma trinca?
-            cards_only_i_have = [
-                card for card in estado.mao if card in bucket['cartas'][0]]
-            # print(cards_only_i_have)
+            # logo precisamos calcular a probabilidade de isto acontecer baseado
+            # nas cartas que estão na mesa e na minha mão.
+
+            # obviamente, nos nao sabemos a carta do adversário. porém sabemos que
+            # ele ainda está no jogo. se a aposta for aumentada um pouco
+
             max_aposta = estado.banca_jogadores[estado.my_id]
 
             if max_aposta < estado.aposta_minima*2:
@@ -30,21 +28,8 @@ def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
                 max_aposta = estado.banca_jogadores[estado.my_id]
                 break
 
-            if len(cards_only_i_have) > 1:
-                print(f"tenho cartas boas, dei all-in")
-                return False, max_aposta
-            if len(cards_only_i_have) > 0:
-                nao_desiste = True
-
-    # nao temos nada, corre:
-    aposta = min(estado.aposta_minima,
-                 estado.banca_jogadores[estado.my_id])
-    if nao_desiste:
-        print(f"fiquei no jogo apostando {aposta}")
-        return False, min(estado.aposta_minima, estado.banca_jogadores[estado.my_id])
-    else:
-        print(f"desisti com aposta {aposta}")
-        return estado.aposta_minima > 0, 0
+    # não desiste, nem aposta
+    return False, min(estado.aposta_minima, estado.banca_jogadores[estado.my_id])
 
 
 def test():

@@ -164,7 +164,7 @@ class Rodada:
     # retorna os jogadores que ainda estão no jogo
     def processar_rodada(self):
         self.historico_estado.append(
-            f"comecando rodada jogador {self.primeiro_jogador} vai primeiro")
+            f"comecando rodada jogador {self.jogadores[self.primeiro_jogador].nome} vai primeiro")
 
         self.indice_jogador_atual = self.primeiro_jogador
 

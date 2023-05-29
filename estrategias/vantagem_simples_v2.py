@@ -4,14 +4,13 @@ CUTOFF = 0.7
 
 # tenta calcular a maior vantagem possível que eu tenho e dá all-in caso
 # seja maior que um certo valor
-# desiste caso o inimigo aposte algo e nos nao temos cartas
 
 
 def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
     mao_completa = estado.mesa + estado.mao
     buckets = CalculadoraDeVitoria(
     ).get_labeled_buckets([mao_completa])
-    nao_desiste = False
+
     for bucket in buckets:
         if len(bucket['cartas']) > 0:
 
@@ -31,20 +30,14 @@ def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
                 break
 
             if len(cards_only_i_have) > 1:
-                print(f"tenho cartas boas, dei all-in")
                 return False, max_aposta
-            if len(cards_only_i_have) > 0:
-                nao_desiste = True
 
     # nao temos nada, corre:
-    aposta = min(estado.aposta_minima,
-                 estado.banca_jogadores[estado.my_id])
-    if nao_desiste:
-        print(f"fiquei no jogo apostando {aposta}")
-        return False, min(estado.aposta_minima, estado.banca_jogadores[estado.my_id])
-    else:
-        print(f"desisti com aposta {aposta}")
-        return estado.aposta_minima > 0, 0
+    print("aposta minima = ", estado.aposta_minima)
+    return estado.aposta_minima > 0, 0
+
+    # # não desiste, nem aposta
+    # return False, min(estado.aposta_minima, estado.banca_jogadores[estado.my_id])
 
 
 def test():

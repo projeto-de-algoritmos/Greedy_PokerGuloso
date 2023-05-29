@@ -101,7 +101,7 @@ def compara_todas_as_estrategias(should_print=False):
     for scriptA in scripts:
         index = scripts.index(scriptA)
         for scriptB in scripts[index:]:
-            print(f"comparando '{scriptA}' com '{scriptB}'")
+            print(f"comparando A='{scriptA}' com B='{scriptB}'")
             subprocess.call(
                 ["cp", f"estrategias/{scriptA}", "scriptA.py"])
             subprocess.call(
@@ -113,6 +113,7 @@ def compara_todas_as_estrategias(should_print=False):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == 'get_estatisticas':
+        subprocess.run(["python3", "sim.py", "-s", "-iter=3000"])
         estatisticas_sobre_log(should_print=True)
     else:
         compara_todas_as_estrategias(should_print=True)

@@ -344,6 +344,7 @@ class CalculadoraChanceVitoria():
 
     # retorna valor entre [0.0, 1.0]
     def get_chance_de_vitoria(self, mao: list[Carta]) -> float:
+
         return 1.0
 
 
