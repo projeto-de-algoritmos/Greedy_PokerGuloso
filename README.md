@@ -60,9 +60,14 @@ python sim.py
 Esse comando vai gerar um arquivo `log_jogos.json` e `logs/log_jogos_<timestamp>.json`
 Este arquivo é usado para análise, que gera estatísticas sobre os jogos e permitem o desenvolvimento de um algoritmo melhor.
 
-Para executar a análise (que uso o `log_jogos.json`), rode:
+Para executar a análise de todas as estrategias , rode:
 ```
 python analise.py
+```
+
+Para executar uma análise sobre o `log_jogos.json`, rode:
+```
+python analise.py get_estatisticas
 ```
 
 

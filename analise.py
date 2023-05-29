@@ -1,5 +1,6 @@
 import json
 import subprocess
+import sys
 
 
 def estatisticas_sobre_log(should_print=False):
@@ -104,5 +105,7 @@ def compara_todas_as_estrategias(should_print=False):
 
 
 if __name__ == "__main__":
-    # estatisticas_sobre_log(should_print=True)
-    compara_todas_as_estrategias()
+    if sys.argv[2] == 'get_estatisticas':
+        estatisticas_sobre_log(should_print=True)
+    else:
+        compara_todas_as_estrategias()
