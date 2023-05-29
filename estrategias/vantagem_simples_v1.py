@@ -30,8 +30,6 @@ def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
                 break
 
             if len(cards_only_i_have) > 1:
-                print(
-                    f"im {estado.my_id} and i have {cards_only_i_have} for a {bucket['tipo']}")
                 return False, max_aposta
 
     # não desiste, nem aposta

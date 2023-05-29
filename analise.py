@@ -46,7 +46,7 @@ def estatisticas_sobre_log(should_print=False):
         print(f"falencias B: \t{falencias_B} ")
         print_object(hist_cartas, "cartas vencedoras")
         print_object(hist_vitoria, "jogadas vencedoras")
-        print_object(empates, "empates")
+        # print_object(empates, "empates")
     else:
         return {
             "jogos": len(jogos),
@@ -92,6 +92,9 @@ def compara_todas_as_estrategias(should_print=False):
     scripts = subprocess.check_output(["ls", "estrategias/"]).decode("utf-8")
     scripts = scripts.strip().split("\n")
 
+    print("os seguintes scripts foram encontrados e serao comparados:")
+    print(*[f"\t- {script}" for script in scripts], sep="\n", end="\n\n")
+
     for scriptA in scripts:
         index = scripts.index(scriptA)
         for scriptB in scripts[index:]:
@@ -100,12 +103,13 @@ def compara_todas_as_estrategias(should_print=False):
                 ["cp", f"estrategias/{scriptA}", "scriptA.py"])
             subprocess.call(
                 ["cp", f"estrategias/{scriptB}", "scriptB.py"])
-            subprocess.run(["python3", "sim.py"])
-            estatisticas_sobre_log(should_print=True)
+            subprocess.run(["python3", "sim.py", "-s"])
+            estatisticas_sobre_log(should_print=should_print)
+            print("\n\n")
 
 
 if __name__ == "__main__":
-    if sys.argv[2] == 'get_estatisticas':
+    if len(sys.argv) > 1 and sys.argv[1] == 'get_estatisticas':
         estatisticas_sobre_log(should_print=True)
     else:
-        compara_todas_as_estrategias()
+        compara_todas_as_estrategias(should_print=True)

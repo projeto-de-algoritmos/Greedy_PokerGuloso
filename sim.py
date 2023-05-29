@@ -1,6 +1,8 @@
 import subprocess
 import time
 import json
+import sys
+
 from scriptA import fazer_jogada as fazer_jogadaA
 from scriptB import fazer_jogada as fazer_jogadaB
 from common import *
@@ -378,7 +380,8 @@ class Partida:
                 item['cartas_do_vencedor'] = [c.__repr__()
                                               for c in item['cartas_do_vencedor']]
 
-            print('condicao_vitoria: ', json.dumps(cv, indent=4))
+            if not SILENT:
+                print('condicao_vitoria: ', json.dumps(cv, indent=4))
 
             self.descritor_partida = {
                 'mesa': [c.__repr__() for c in self.mesa],
@@ -400,6 +403,19 @@ class Partida:
 
 
 def main():
+    global SILENT
+    SILENT = False
+    iteracoes = 1000
+
+    for arg in sys.argv[1:]:
+
+        # silent mode
+        if arg == "-s":
+            SILENT = True
+
+        if arg.startswith("-iter="):
+            iteracoes = int(arg.split("=")[1])
+
     jogos = []
     jogadores = None
     for i in range(1000):
@@ -411,7 +427,8 @@ def main():
                     "jogador " + jogador.nome + " faliu. Resetando todas as bancas")
                 for jogador in partida.jogadores:
                     jogador.banca = 1000
-        print(json.dumps(historico_estado, indent=4))
+        if not SILENT:
+            print(json.dumps(historico_estado, indent=4))
         jogos.append(partida.descritor_partida.copy())
         jogadores = partida.jogadores.copy()
 
