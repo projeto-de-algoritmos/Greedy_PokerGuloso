@@ -72,7 +72,9 @@ class Rodada:
 
     mesa: list[Carta]
 
-    def __init__(self, jogadores: list[Jogador], mesa: list[Carta]):
+    primeiro_jogador: int
+
+    def __init__(self, jogadores: list[Jogador], mesa: list[Carta], primeiro_jogador: int = 0):
         self.jogadores = jogadores
         self.historico_estado = []
         self.indice_jogador_aumento = -1
@@ -83,6 +85,7 @@ class Rodada:
         self.pote_rodada = 0
         self.mesa = mesa
         self.small_blind_value = None
+        self.primeiro_jogador = primeiro_jogador
 
     def remove_jogador(self, indice_jogador=-1, jogador=None):
         if jogador != None:
@@ -158,7 +161,10 @@ class Rodada:
 
     # retorna os jogadores que ainda estão no jogo
     def processar_rodada(self):
-        self.historico_estado.append("comecando rodada")
+        self.historico_estado.append(
+            f"comecando rodada jogador {self.primeiro_jogador} vai primeiro")
+
+        self.indice_jogador_atual = self.primeiro_jogador
 
         while self.turnos_jogados < self.turnos_totais:
             i = self.indice_jogador_atual
@@ -218,6 +224,7 @@ class Partida:
         self.historico_estado = []
         self.mesa = []
         self.banca = 0
+        seed = random.randint(0, 1000000)
         cartas = faz_permutacao_cartas(seed)
         self.jogadores = [
             Jogador(fazer_jogadaA, cartas[0:2], valor_inicial, 0),
@@ -274,7 +281,7 @@ class Partida:
             self.historico_estado.append(
                 f"bancas: {[jogador.banca for jogador in jogadores]}")
 
-            rodada = Rodada(jogadores, self.mesa)
+            rodada = Rodada(jogadores, self.mesa, self.big_blind)
             jogadores = rodada.processar_rodada()
             self.historico_estado += rodada.historico_estado
 
