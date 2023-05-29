@@ -16,7 +16,7 @@ def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
             # nas cartas que estão na mesa e na minha mão.
 
             # obviamente, nos nao sabemos a carta do adversário. porém sabemos que
-            # ele ainda está no jogo.
+            # ele ainda está no jogo. se a aposta for aumentada um pouco
 
             max_aposta = estado.banca_jogadores[estado.my_id]
 

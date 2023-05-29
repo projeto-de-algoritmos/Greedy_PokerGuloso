@@ -70,8 +70,8 @@ Para executar uma análise sobre o `log_jogos.json`, rode:
 python analise.py get_estatisticas
 ```
 
-
 ## Outros 
+
 #### Considerações sobre o projeto
 
 A implementação de uma interface gráfica iria demorar demais, detraindo esforço da proposta principal do projeto, então não foi feita.
@@ -115,3 +115,337 @@ When attempting to find a local optimal solution to a problem, you can follow th
 - Refine and Iterate: If necessary, refine the problem definition, objective function, heuristics, or search strategy based on the insights gained from analyzing the solution. Repeat the process to improve the solution further.
 
 By following these steps, you can approach problems systematically and iteratively improve towards a local optimal solution. Remember that the effectiveness of this approach depends on the problem's nature and the chosen heuristics or search strategy.
+
+#### Analises dos algoritimos criados
+
+Descrições:
+1. nunca_desiste_nem_aumenta.py
+   - Simplesmente paga o valor que precisa pagar pra continuar (inclusive all in)
+   - este é um baseline
+2. vantagem_simples_v1.py
+   - **hipotese**: apostar se suas cartas já forem boas
+   - calcula, no conjunto atual de cartas, quais são as chances de ganhar. Se 2 cartas que levam a vitoria forem da sua mão, você tem uma vantagem injusta pro seu adversário, então da all in. Caso contrário faz como o primeiro.
+   - **resultado**: surpreendemente, não difere quase nada da estratégia baseline
+3. vantagem_fatorada_v1.py
+   - **hipotese**: apostar conforme suas chances de ganhar seja grande
+   - faz como a 5, mas apenas aceita vitorias melhores que um par (como 2 pares).
+   - **resultado:** 
+4. vantagem_simples_v2.py
+   - faz como a 2, mas desiste de não tiver cartas boas.
+5. vantagem_simples_v3.py
+   - faz como a 4, mas permance no jogo se tiver 1 carta que representa vantagem injusta.
+   - **resultado**
+6. vantagem_simples_v4.py
+   - **hipotese:** desistir é, em geral, uma jogada ruim. ao invés disso, vamos fatorar apostas.
+   - faz como a 5, mas nunca desiste a aposta menos.
+   - **resultado:** em comparação com o 5, vai a falência menos vezes
+
+```
+os seguintes scripts foram encontrados e serao comparados:
+	- nunca_desiste_nem_aumenta.py
+	- vantagem_fatorada_v1.py
+	- vantagem_simples_v1.py
+	- vantagem_simples_v2.py
+	- vantagem_simples_v3.py
+
+
+
+diff vitorias: [
+    {
+        "diffApraB": -40,
+        "percentualA": 0.48633333333333334,
+        "percentualB": 0.49966666666666665,
+        "scriptA": "vantagem_fatorada_v1.py",
+        "scriptB": "vantagem_fatorada_v1.py"
+    },
+    {
+        "diffApraB": -47,
+        "percentualA": 0.4856666666666667,
+        "percentualB": 0.5013333333333333,
+        "scriptA": "vantagem_fatorada_v1.py",
+        "scriptB": "vantagem_simples_v2.py"
+    },
+    {
+        "diffApraB": -50,
+        "percentualA": 0.48333333333333334,
+        "percentualB": 0.5,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": -57,
+        "percentualA": 0.48233333333333334,
+        "percentualB": 0.5013333333333333,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "vantagem_simples_v2.py"
+    },
+    {
+        "diffApraB": -59,
+        "percentualA": 0.48333333333333334,
+        "percentualB": 0.503,
+        "scriptA": "vantagem_simples_v1.py",
+        "scriptB": "vantagem_simples_v1.py"
+    },
+    {
+        "diffApraB": -61,
+        "percentualA": 0.48333333333333334,
+        "percentualB": 0.5036666666666667,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "vantagem_simples_v3.py"
+    },
+    {
+        "diffApraB": -64,
+        "percentualA": 0.481,
+        "percentualB": 0.5023333333333333,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "vantagem_fatorada_v1.py"
+    },
+    {
+        "diffApraB": -69,
+        "percentualA": 0.4786666666666667,
+        "percentualB": 0.5016666666666667,
+        "scriptA": "vantagem_fatorada_v1.py",
+        "scriptB": "vantagem_simples_v1.py"
+    },
+    {
+        "diffApraB": -72,
+        "percentualA": 0.48,
+        "percentualB": 0.504,
+        "scriptA": "vantagem_fatorada_v1.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": -78,
+        "percentualA": 0.47733333333333333,
+        "percentualB": 0.5033333333333333,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "vantagem_simples_v1.py"
+    },
+    {
+        "diffApraB": -99,
+        "percentualA": 0.4786666666666667,
+        "percentualB": 0.5116666666666667,
+        "scriptA": "vantagem_simples_v4.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": -119,
+        "percentualA": 0.47533333333333333,
+        "percentualB": 0.515,
+        "scriptA": "vantagem_simples_v2.py",
+        "scriptB": "vantagem_simples_v3.py"
+    },
+    {
+        "diffApraB": -122,
+        "percentualA": 0.47533333333333333,
+        "percentualB": 0.516,
+        "scriptA": "vantagem_simples_v2.py",
+        "scriptB": "vantagem_simples_v2.py"
+    },
+    {
+        "diffApraB": -134,
+        "percentualA": 0.473,
+        "percentualB": 0.5176666666666667,
+        "scriptA": "vantagem_simples_v2.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": -145,
+        "percentualA": 0.471,
+        "percentualB": 0.5193333333333333,
+        "scriptA": "vantagem_simples_v3.py",
+        "scriptB": "vantagem_simples_v3.py"
+    },
+    {
+        "diffApraB": -160,
+        "percentualA": 0.4686666666666667,
+        "percentualB": 0.522,
+        "scriptA": "vantagem_simples_v3.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": 236,
+        "percentualA": 0.5333333333333333,
+        "percentualB": 0.45466666666666666,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "nunca_desiste_nem_aumenta.py"
+    },
+    {
+        "diffApraB": 254,
+        "percentualA": 0.5393333333333333,
+        "percentualB": 0.45466666666666666,
+        "scriptA": "vantagem_fatorada_v1.py",
+        "scriptB": "vantagem_simples_v3.py"
+    },
+    {
+        "diffApraB": 655,
+        "percentualA": 0.6026666666666667,
+        "percentualB": 0.38433333333333336,
+        "scriptA": "vantagem_simples_v1.py",
+        "scriptB": "vantagem_simples_v3.py"
+    },
+    {
+        "diffApraB": 673,
+        "percentualA": 0.6063333333333333,
+        "percentualB": 0.382,
+        "scriptA": "vantagem_simples_v1.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": 901,
+        "percentualA": 0.6456666666666667,
+        "percentualB": 0.3453333333333333,
+        "scriptA": "vantagem_simples_v1.py",
+        "scriptB": "vantagem_simples_v2.py"
+    }
+]
+diff falencias: [
+    {
+        "diffApraB": -40,
+        "percentualA": 0.48633333333333334,
+        "percentualB": 0.49966666666666665,
+        "scriptA": "vantagem_fatorada_v1.py",
+        "scriptB": "vantagem_fatorada_v1.py"
+    },
+    {
+        "diffApraB": -47,
+        "percentualA": 0.4856666666666667,
+        "percentualB": 0.5013333333333333,
+        "scriptA": "vantagem_fatorada_v1.py",
+        "scriptB": "vantagem_simples_v2.py"
+    },
+    {
+        "diffApraB": -50,
+        "percentualA": 0.48333333333333334,
+        "percentualB": 0.5,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": -57,
+        "percentualA": 0.48233333333333334,
+        "percentualB": 0.5013333333333333,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "vantagem_simples_v2.py"
+    },
+    {
+        "diffApraB": -59,
+        "percentualA": 0.48333333333333334,
+        "percentualB": 0.503,
+        "scriptA": "vantagem_simples_v1.py",
+        "scriptB": "vantagem_simples_v1.py"
+    },
+    {
+        "diffApraB": -61,
+        "percentualA": 0.48333333333333334,
+        "percentualB": 0.5036666666666667,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "vantagem_simples_v3.py"
+    },
+    {
+        "diffApraB": -64,
+        "percentualA": 0.481,
+        "percentualB": 0.5023333333333333,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "vantagem_fatorada_v1.py"
+    },
+    {
+        "diffApraB": -69,
+        "percentualA": 0.4786666666666667,
+        "percentualB": 0.5016666666666667,
+        "scriptA": "vantagem_fatorada_v1.py",
+        "scriptB": "vantagem_simples_v1.py"
+    },
+    {
+        "diffApraB": -72,
+        "percentualA": 0.48,
+        "percentualB": 0.504,
+        "scriptA": "vantagem_fatorada_v1.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": -78,
+        "percentualA": 0.47733333333333333,
+        "percentualB": 0.5033333333333333,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "vantagem_simples_v1.py"
+    },
+    {
+        "diffApraB": -99,
+        "percentualA": 0.4786666666666667,
+        "percentualB": 0.5116666666666667,
+        "scriptA": "vantagem_simples_v4.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": -119,
+        "percentualA": 0.47533333333333333,
+        "percentualB": 0.515,
+        "scriptA": "vantagem_simples_v2.py",
+        "scriptB": "vantagem_simples_v3.py"
+    },
+    {
+        "diffApraB": -122,
+        "percentualA": 0.47533333333333333,
+        "percentualB": 0.516,
+        "scriptA": "vantagem_simples_v2.py",
+        "scriptB": "vantagem_simples_v2.py"
+    },
+    {
+        "diffApraB": -134,
+        "percentualA": 0.473,
+        "percentualB": 0.5176666666666667,
+        "scriptA": "vantagem_simples_v2.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": -145,
+        "percentualA": 0.471,
+        "percentualB": 0.5193333333333333,
+        "scriptA": "vantagem_simples_v3.py",
+        "scriptB": "vantagem_simples_v3.py"
+    },
+    {
+        "diffApraB": -160,
+        "percentualA": 0.4686666666666667,
+        "percentualB": 0.522,
+        "scriptA": "vantagem_simples_v3.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": 236,
+        "percentualA": 0.5333333333333333,
+        "percentualB": 0.45466666666666666,
+        "scriptA": "nunca_desiste_nem_aumenta.py",
+        "scriptB": "nunca_desiste_nem_aumenta.py"
+    },
+    {
+        "diffApraB": 254,
+        "percentualA": 0.5393333333333333,
+        "percentualB": 0.45466666666666666,
+        "scriptA": "vantagem_fatorada_v1.py",
+        "scriptB": "vantagem_simples_v3.py"
+    },
+    {
+        "diffApraB": 655,
+        "percentualA": 0.6026666666666667,
+        "percentualB": 0.38433333333333336,
+        "scriptA": "vantagem_simples_v1.py",
+        "scriptB": "vantagem_simples_v3.py"
+    },
+    {
+        "diffApraB": 673,
+        "percentualA": 0.6063333333333333,
+        "percentualB": 0.382,
+        "scriptA": "vantagem_simples_v1.py",
+        "scriptB": "vantagem_simples_v4.py"
+    },
+    {
+        "diffApraB": 901,
+        "percentualA": 0.6456666666666667,
+        "percentualB": 0.3453333333333333,
+        "scriptA": "vantagem_simples_v1.py",
+        "scriptB": "vantagem_simples_v2.py"
+    }
+]
+```

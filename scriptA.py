@@ -31,7 +31,7 @@ def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
                 break
 
             if len(cards_only_i_have) > 1:
-                print(f"tenho cartas boas, dei all-in")
+                # print(f"tenho cartas boas, dei all-in")
                 return False, max_aposta
             if len(cards_only_i_have) > 0:
                 nao_desiste = True
@@ -40,11 +40,11 @@ def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
     aposta = min(estado.aposta_minima,
                  estado.banca_jogadores[estado.my_id])
     if nao_desiste:
-        print(f"fiquei no jogo apostando {aposta}")
-        return False, min(estado.aposta_minima, estado.banca_jogadores[estado.my_id])
+        # print(f"fiquei no jogo apostando {aposta}")
+        return False, aposta
     else:
-        print(f"desisti com aposta {aposta}")
-        return estado.aposta_minima > 0, 0
+        # print(f"desisti com aposta {aposta}")
+        return estado.aposta_minima > 0, aposta
 
 
 def test():

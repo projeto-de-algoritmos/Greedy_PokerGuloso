@@ -50,18 +50,17 @@ def estatisticas_sobre_log(should_print=False):
         # print_object(hist_cartas, "cartas vencedoras")
         # print_object(hist_vitoria, "jogadas vencedoras")
         # print_object(empates, "empates")
-    else:
-        return {
-            "jogos": len(jogos),
-            "vitorias A": vitorias_A,
-            "vitorias B": vitorias_B,
-            "empates": len(empates),
-            "falencias A": falencias_A,
-            "falencias B": falencias_B,
-            "cartas vencedoras": hist_cartas,
-            "jogadas vencedoras": hist_vitoria,
-            "empates": empates,
-        }
+    return {
+        "jogos": len(jogos),
+        "vitorias A": vitorias_A,
+        "vitorias B": vitorias_B,
+        "empates": len(empates),
+        "falencias A": falencias_A,
+        "falencias B": falencias_B,
+        "cartas vencedoras": hist_cartas,
+        "jogadas vencedoras": hist_vitoria,
+        "empates": empates,
+    }
 
 
 def print_object(hist, nome):
@@ -90,7 +89,24 @@ def get_last_log():
     return jogos
 
 
-def compara_todas_as_estrategias(should_print=False):
+def save_computed(scriptA, scriptB, ret):
+    with open(f'analises/computed/{scriptA}---{scriptB}.json', 'w') as f:
+        f.write(json.dumps(ret))
+
+
+def load_computed(scriptA, scriptB) -> dict:
+    with open(f'analises/computed/{scriptA}---{scriptB}.json', 'r') as f:
+        return json.loads(f.read())
+
+
+def find_computed(scriptA, scriptB) -> bool:
+    vals = subprocess.check_output(
+        ["ls", "analises/computed/"]).decode("utf-8")
+    vals = vals.strip().split("\n")
+    return f"{scriptA}---{scriptB}.json" in vals
+
+
+def compara_todas_as_estrategias(should_print=False, use_computed=False):
 
     scripts = subprocess.check_output(["ls", "estrategias/"]).decode("utf-8")
     scripts = scripts.strip().split("\n")
@@ -98,22 +114,58 @@ def compara_todas_as_estrategias(should_print=False):
     print("os seguintes scripts foram encontrados e serao comparados:")
     print(*[f"\t- {script}" for script in scripts], sep="\n", end="\n\n")
 
+    diffs_vitorias = []
+    diffs_falencias = []
+
     for scriptA in scripts:
         index = scripts.index(scriptA)
         for scriptB in scripts[index:]:
+            ret = None
             print(f"comparando A='{scriptA}' com B='{scriptB}'")
-            subprocess.call(
-                ["cp", f"estrategias/{scriptA}", "scriptA.py"])
-            subprocess.call(
-                ["cp", f"estrategias/{scriptB}", "scriptB.py"])
-            subprocess.run(["python3", "sim.py", "-s", "-iter=3000"])
-            estatisticas_sobre_log(should_print=should_print)
+            if use_computed and find_computed(scriptA, scriptB):
+                print(f"usando previamente computado")
+                ret = load_computed(scriptA, scriptB)
+            else:
+                subprocess.call(
+                    ["cp", f"estrategias/{scriptA}", "scriptA.py"])
+                subprocess.call(
+                    ["cp", f"estrategias/{scriptB}", "scriptB.py"])
+                subprocess.run(["python3", "sim.py", "-s", "-iter=3000"])
+                ret = estatisticas_sobre_log(should_print=should_print)
+                save_computed(scriptA, scriptB, ret)
+            diffs_vitorias.append({
+                'diffApraB': ret['vitorias A'] - ret['vitorias B'],
+                'percentualA': ret['vitorias A'] / (ret['jogos']),
+                'percentualB': ret['vitorias B'] / (ret['jogos']),
+                'scriptA': scriptA,
+                'scriptB': scriptB,
+                # 'analysis': ret,
+            })
+            diffs_falencias.append({
+                'diffApraB': ret['falencias A'] - ret['falencias B'],
+                'percentualA': ret['falencias A'] / (ret['jogos']),
+                'percentualB': ret['falencias B'] / (ret['jogos']),
+                'scriptA': scriptA,
+                'scriptB': scriptB,
+                # 'analysis': ret,
+            })
             print("\n\n")
+
+    diffs_vitorias = sorted(diffs_vitorias, key=lambda k: abs(k['diffApraB']))
+    print_object(diffs_vitorias, "diff vitorias")
+
+    diffs_falencias = sorted(
+        diffs_falencias, key=lambda k: abs(k['diffApraB']))
+    print_object(diffs_vitorias, "diff falencias")
 
 
 if __name__ == "__main__":
+    use_computed = '-c' in sys.argv
+    print(use_computed)
+
     if len(sys.argv) > 1 and sys.argv[1] == 'get_estatisticas':
-        subprocess.run(["python3", "sim.py", "-s", "-iter=3000"])
+        subprocess.run(["python3", "sim.py", "-s", "-iter=1000"])
         estatisticas_sobre_log(should_print=True)
     else:
-        compara_todas_as_estrategias(should_print=True)
+        compara_todas_as_estrategias(
+            should_print=True, use_computed=use_computed)

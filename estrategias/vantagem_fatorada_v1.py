@@ -11,8 +11,11 @@ def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
     mao_completa = estado.mesa + estado.mao
     buckets = CalculadoraDeVitoria(
     ).get_labeled_buckets([mao_completa])
-    nao_desiste = False
     for bucket in buckets:
+        if bucket['tipo'] == 'high_card' \
+            or bucket['tipo'] == 'pair'\
+                or bucket['tipo'] == 'two_pairs':
+            continue
         if len(bucket['cartas']) > 0:
 
             # eu tenho um vantagem injusta?
@@ -31,7 +34,7 @@ def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
                 break
 
             if len(cards_only_i_have) > 1:
-                print(f"tenho cartas boas, dei all-in")
+                # print(f"tenho cartas boas, dei all-in")
                 return False, max_aposta
             if len(cards_only_i_have) > 0:
                 nao_desiste = True
@@ -39,12 +42,8 @@ def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
     # nao temos nada, corre:
     aposta = min(estado.aposta_minima,
                  estado.banca_jogadores[estado.my_id])
-    if nao_desiste:
-        print(f"fiquei no jogo apostando {aposta}")
-        return False, min(estado.aposta_minima, estado.banca_jogadores[estado.my_id])
-    else:
-        print(f"desisti com aposta {aposta}")
-        return estado.aposta_minima > 0, 0
+    # print(f"fiquei no jogo apostando {aposta}")
+    return False, aposta
 
 
 def test():

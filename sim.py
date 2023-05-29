@@ -123,15 +123,21 @@ class Rodada:
                     jogador, f"fez aposta menor do que deveria, saiu do jogo")
 
         elif aumento == valor_que_falta:
-            self.historico_estado.append(
-                f"jogador {jogador.nome} igualou a aposta {aumento}")
+
+            if aumento > jogador.banca:
+                self.log_jogador(
+                    jogador, f"jogador igualou aposta com all_in")
+                aumento = jogador.banca
+            else:
+                self.log_jogador(jogador,
+                                 f"igualou a aposta {aumento}")
             self.iguala(jogador, aumento)
 
         elif aumento > valor_que_falta:
             if self.valor_necessario * 2 > aposta_total:
-                self.historico_estado.append(
+                self.log_jogador(
                     jogador, f"apostou ({aumento}) menos que o dobro da aposta atual (valor total: {self.valor_necessario} e o que falta pro jogador botar era {valor_que_falta} totalizando uma aposta de {aposta_total}), assumiremos que ele igualou a jogada")
-                self.iguala(jogador)
+                self.iguala(jogador, aumento)
 
             self.aumenta(jogador, aumento)
 
@@ -141,8 +147,9 @@ class Rodada:
 
     def aumenta(self, jogador: Jogador, aumento):
         if aumento > jogador.banca:
-            self.jogador_falhou(
-                jogador, f"nao tem dinheiro para igualar aposta")
+            self.log_jogador(
+                jogador, f"deu all_in")
+            aumento = jogador.banca
 
         self.valor_necessario = max(
             aumento + jogador.aposta_turno_atual, self.valor_necessario)
