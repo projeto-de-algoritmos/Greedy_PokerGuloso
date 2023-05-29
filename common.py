@@ -88,6 +88,7 @@ class EstadoDoJogoParaJogador:
     mao: list[Carta]
 
     # info jogadores
+    my_id: int
     aposta_jogadores: list[int]
     banca_jogadores: list[int]
     aposta_total_jogadores: list[int]
@@ -100,6 +101,7 @@ class EstadoDoJogoParaJogador:
     soma_bancas: int
 
     def __init__(self,
+                 my_id: int,
                  mesa: list[Carta],
                  mao: list[Carta],
                  aposta_jogadores: list[int],
@@ -126,6 +128,8 @@ class EstadoDoJogoParaJogador:
         self.preco_de_ficar_no_jogo = aposta + max(self.aposta_total_jogadores)
         self.pote = sum(self.aposta_total_jogadores)
         self.soma_bancas = sum(self.banca_jogadores)
+
+        self.my_id = my_id
 
 
 class CalculadoraDeVitoria:
@@ -181,12 +185,7 @@ class CalculadoraDeVitoria:
         sumB = sum(maoB)
         return sumA > sumB
 
-    # recebe as maos (mesa + cartas do jogador) pra cada jogador
-    # retorna uma lista de vencedores (pelo menos 1) e uma lista de maos vencedoras
-    def get_maos_vencedoras(self,
-                            maos: list[list[Carta]]) ->\
-            tuple[list[int], list[dict]]:
-
+    def get_buckets(self, maos: list[list[Carta]]):
         for mao_i in range(len(maos)):
             maos[mao_i] = sorted(
                 maos[mao_i], key=lambda carta: carta.valor_i, reverse=True)
@@ -201,6 +200,25 @@ class CalculadoraDeVitoria:
                     buckets[i].append(maos.index(mao))
                     cartas[i].append(c_cartas.copy())
                 i += 1
+
+        return buckets, cartas
+
+    def get_labeled_buckets(self, maos: list[list[Carta]]):
+        buckets, cartas = self.get_buckets(maos)
+        return [
+            {
+                'tipo': self.ordem_jogadas[i]['nome'],
+                'cartas': cartas[i],
+            } for i in range(len(buckets))
+        ]
+        return list(zip(self.ordem_jogadas, buckets, cartas))
+
+    # recebe as maos (mesa + cartas do jogador) pra cada jogador
+    # retorna uma lista de vencedores (pelo menos 1) e uma lista de maos vencedoras
+    def get_maos_vencedoras(self,
+                            maos: list[list[Carta]]) ->\
+            tuple[list[int], list[dict]]:
+        buckets, cartas = self.get_buckets(maos)
 
         i = 0
         for bucket in buckets:

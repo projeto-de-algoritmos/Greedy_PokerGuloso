@@ -41,7 +41,7 @@ class Jogador:
 
     def faz_aposta(self, valor: int, sem_disputa: bool = False):
         if self.banca < valor:
-            raise Exception("não tem valor para fazer aposta")
+            raise Exception("nao tem valor para fazer aposta")
         self.banca -= valor
         if sem_disputa:
             self.aposta_sem_disputa += valor
@@ -99,7 +99,7 @@ class Rodada:
 
     # toda vez que o jogador faz jogada falha, vamos assumir que ele desistiu por W.O.
     def processa_aposta(self, jogador, aumento):
-        if aumento == 0:
+        if aumento == 0 and self.valor_aumento <= 0:
             return
         i = self.jogadores.index(jogador)
 
@@ -109,12 +109,22 @@ class Rodada:
 
         valor_adicionado = aumento - jogador.aposta_turno_atual
         if valor_adicionado > jogador.banca:
-            self.jogador_falhou(
-                jogador, f"não tem dinheiro para igualar")
+            self.log_jogador(
+                jogador, f"apostou {aumento} mas so tem {jogador.banca} na banca. valor_adicionado: {valor_adicionado}")
+            if aumento == jogador.banca:
+                self.log_jogador(
+                    jogador, f"deu all in")
+            else:
+                self.jogador_falhou(
+                    jogador, f"nao tem dinheiro para fazer aposta desejada")
 
         if aumento < self.valor_aumento:
             self.jogador_falhou(
                 jogador, f"apostou menos que o anterior")
+
+        if aumento == self.valor_aumento:
+            self.historico_estado.append(
+                f"jogador {jogador.nome} igualou a aposta {aumento}")
 
         if aumento > self.valor_aumento:
             if self.valor_aumento * 2 > aumento:
@@ -123,13 +133,10 @@ class Rodada:
 
             self.indice_jogador_aumento = i
             self.valor_aumento = aumento
-            self.turnos_restantes += len(self.jogadores) - 1
+            self.turnos_restantes += len(self.jogadores) - \
+                self.turnos_restantes + self.turnos_jogados
             self.log_jogador(
-                self.jogadores[i], f"aumentou para {aumento}")
-
-        if aumento == self.valor_aumento:
-            self.historico_estado.append(
-                f"jogador {jogador.nome} igualou a aposta {aumento}")
+                jogador, f"aumentou para {aumento}")
 
         jogador.aposta_turno_atual += valor_adicionado
         jogador.aposta_total += valor_adicionado
@@ -137,16 +144,16 @@ class Rodada:
 
     # retorna os jogadores que ainda estão no jogo
     def processar_rodada(self):
-        self.historico_estado.append("começando rodada")
+        self.historico_estado.append("comecando rodada")
 
         while self.turnos_jogados < self.turnos_restantes:
             i = self.indice_jogador_atual
             jogador = self.jogadores[i]
 
-            self.log_jogador(jogador, f"começando rodada")
-
             desistiu, aumento = jogador.fazer_jogada(
                 self.get_estado_jogo(jogador))
+            # self.historico_estado.append(
+            #     f"jogador {jogador.nome} jogou {desistiu} {aumento}")
 
             if desistiu:
                 self.log_jogador(jogador, f"desistiu")
@@ -167,6 +174,7 @@ class Rodada:
         if self.small_blind_value is not None:
             aposta_minima = self.small_blind_value
         return EstadoDoJogoParaJogador(
+            self.jogadores.index(jogador),
             jogador.cartas,
             self.mesa,
             [jogador.aposta_turno_atual for jogador in self.jogadores],
@@ -220,6 +228,8 @@ class Partida:
         self.historico_estado.append("iniciando partida")
 
         jogadores = self.jogadores.copy()
+        self.historico_estado.append(
+            f"bancas: {[jogador.banca for jogador in jogadores]}")
 
         self.historico_estado.append(
             f"MESA: {', '.join([c.__repr__() for c in self.mesa])}")
@@ -249,6 +259,7 @@ class Partida:
 
             rodada = Rodada(jogadores, self.mesa)
             jogadores = rodada.processar_rodada()
+            self.historico_estado += rodada.historico_estado
 
             if len(jogadores) == 1:
                 self.historico_estado.append(
@@ -333,8 +344,8 @@ class Partida:
 
             self.descritor_partida = {
                 'mesa': [c.__repr__() for c in self.mesa],
-                'jogadorA': [c.__repr__() for c in jogadores[0].cartas],
-                'jogadorB': [c.__repr__() for c in jogadores[1].cartas],
+                'jogadorA': [c.__repr__() for c in self.jogadores[0].cartas],
+                'jogadorB': [c.__repr__() for c in self.jogadores[1].cartas],
                 'condicao_vitoria': [
                     {
                         'jogada': condicao_vitoria[v_i]['jogada'],
