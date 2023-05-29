@@ -73,11 +73,13 @@ class Carta:
         return cls(nome=json_data[0])
 
 
-def faz_permutacao_cartas() -> list[Carta]:
+def faz_permutacao_cartas(seed=0) -> list[Carta]:
     cartas = []
     for i in ['C', 'E', 'O', 'P']:
         for j in range(2, 15):
             cartas.append(Carta(naipe=i, valor_i=j))
+    if seed != 0:
+        random.seed(seed)
     random.shuffle(cartas)
     return cartas
 

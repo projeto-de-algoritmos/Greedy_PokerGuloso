@@ -214,11 +214,11 @@ class Partida:
 
     descritor_partida: dict
 
-    def __init__(self, valor_inicial: int = 1000, big_blind: int = 0, small_blind: int = 1):
+    def __init__(self, valor_inicial: int = 1000, big_blind: int = 0, small_blind: int = 1, seed: int = 1):
         self.historico_estado = []
         self.mesa = []
         self.banca = 0
-        cartas = faz_permutacao_cartas()
+        cartas = faz_permutacao_cartas(seed)
         self.jogadores = [
             Jogador(fazer_jogadaA, cartas[0:2], valor_inicial, 0),
             Jogador(fazer_jogadaB, cartas[2:4], valor_inicial, 1),
@@ -229,8 +229,8 @@ class Partida:
         # como o numero de jogadores que ficam depois de quebrar pode ser diferente do atual
         # nos calculamos o novo big_blind e small_blind no começo da partida play()
         # por isso tem o -1 aqui
-        self.big_blind = big_blind - 1
-        self.small_blind = small_blind - 1
+        self.big_blind = (big_blind - 1 + seed) % len(self.jogadores)
+        self.small_blind = (small_blind - 1 + seed) % len(self.jogadores)
         self.calculadora = CalculadoraDeVitoria()
         self.descritor_partida = {}
 
@@ -383,7 +383,7 @@ class Partida:
 def main():
     jogos = []
     for i in range(1000):
-        partida = Partida()
+        partida = Partida(seed=i)
         historico_estado = partida.play()
         print(json.dumps(historico_estado, indent=4))
         jogos.append(partida.descritor_partida.copy())
