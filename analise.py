@@ -39,13 +39,16 @@ def estatisticas_sobre_log(should_print=False):
 
     if should_print:
         print(f"jogos: \t{len(jogos)} ")
-        print(f"vitorias A: \t{vitorias_A} ")
-        print(f"vitorias B: \t{vitorias_B} ")
-        print(f"empates: \t{len(empates)} ")
-        print(f"falencias A: \t{falencias_A} ")
-        print(f"falencias B: \t{falencias_B} ")
-        print_object(hist_cartas, "cartas vencedoras")
-        print_object(hist_vitoria, "jogadas vencedoras")
+        print(f"vitorias A: \t{vitorias_A} ({vitorias_A/len(jogos)*100:.0f}%)")
+        print(f"vitorias B: \t{vitorias_B} ({vitorias_B/len(jogos)*100:.0f}%)")
+        print(
+            f"empates: \t{len(empates)}  ({len(empates)/len(jogos)*100:.0f}%)")
+        print(
+            f"falencias A: \t{falencias_A} ({falencias_A/len(jogos)*100:.0f}%)")
+        print(
+            f"falencias B: \t{falencias_B} ({falencias_B/len(jogos)*100:.0f}%)")
+        # print_object(hist_cartas, "cartas vencedoras")
+        # print_object(hist_vitoria, "jogadas vencedoras")
         # print_object(empates, "empates")
     else:
         return {
@@ -103,7 +106,7 @@ def compara_todas_as_estrategias(should_print=False):
                 ["cp", f"estrategias/{scriptA}", "scriptA.py"])
             subprocess.call(
                 ["cp", f"estrategias/{scriptB}", "scriptB.py"])
-            subprocess.run(["python3", "sim.py", "-s"])
+            subprocess.run(["python3", "sim.py", "-s", "-iter=3000"])
             estatisticas_sobre_log(should_print=should_print)
             print("\n\n")
 

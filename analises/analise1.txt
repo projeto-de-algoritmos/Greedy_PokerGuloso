@@ -1,0 +1,105 @@
+os seguintes scripts foram encontrados e serao comparados:
+	- nunca_desiste_nem_aumenta.py
+	- vantagem_simples_v1.py
+
+comparando 'nunca_desiste_nem_aumenta.py' com 'nunca_desiste_nem_aumenta.py'
+jogos: 	3000 
+vitorias A: 	1435 (48%)
+vitorias B: 	1524 (51%)
+empates: 	41  (1%)
+falencias A: 	0 (0%)
+falencias B: 	0 (0%)
+cartas vencedoras: {
+    "K": 586,
+    "Q": 559,
+    "8": 525,
+    "9": 505,
+    "J": 480,
+    "A": 468,
+    "6": 448,
+    "4": 421,
+    "7": 415,
+    "3": 406,
+    "10": 389,
+    "5": 378,
+    "2": 338
+}
+jogadas vencedoras: {
+    "pair": 1171,
+    "two_pairs": 1015,
+    "three_of_a_kind": 279,
+    "high_card": 190,
+    "flush": 168,
+    "full_house": 135,
+    "four_of_a_kind": 1
+}
+
+
+
+comparando 'nunca_desiste_nem_aumenta.py' com 'vantagem_simples_v1.py'
+jogos: 	3000 
+vitorias A: 	1463 (49%)
+vitorias B: 	1485 (50%)
+empates: 	52  (2%)
+falencias A: 	453 (15%)
+falencias B: 	755 (25%)
+cartas vencedoras: {
+    "K": 586,
+    "Q": 564,
+    "8": 526,
+    "A": 495,
+    "9": 484,
+    "J": 467,
+    "6": 458,
+    "7": 414,
+    "10": 409,
+    "5": 398,
+    "4": 393,
+    "3": 368,
+    "2": 334
+}
+jogadas vencedoras: {
+    "pair": 1206,
+    "two_pairs": 991,
+    "three_of_a_kind": 255,
+    "high_card": 195,
+    "flush": 171,
+    "full_house": 128,
+    "four_of_a_kind": 2
+}
+
+
+
+comparando 'vantagem_simples_v1.py' com 'vantagem_simples_v1.py'
+jogos: 	3000 
+vitorias A: 	1417 (47%)
+vitorias B: 	1542 (51%)
+empates: 	41  (1%)
+falencias A: 	713 (24%)
+falencias B: 	716 (24%)
+cartas vencedoras: {
+    "K": 573,
+    "8": 518,
+    "6": 510,
+    "Q": 503,
+    "9": 474,
+    "J": 463,
+    "4": 441,
+    "10": 416,
+    "7": 416,
+    "A": 413,
+    "2": 407,
+    "3": 406,
+    "5": 378
+}
+jogadas vencedoras: {
+    "pair": 1458,
+    "two_pairs": 869,
+    "three_of_a_kind": 237,
+    "high_card": 192,
+    "flush": 156,
+    "full_house": 47
+}
+
+
+
