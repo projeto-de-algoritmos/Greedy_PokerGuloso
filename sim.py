@@ -408,7 +408,6 @@ def main():
     iteracoes = 1000
 
     for arg in sys.argv[1:]:
-
         # silent mode
         if arg == "-s":
             SILENT = True
@@ -418,7 +417,7 @@ def main():
 
     jogos = []
     jogadores = None
-    for i in range(1000):
+    for i in range(iteracoes):
         partida = Partida(seed=i, jogadores=jogadores)
         historico_estado = partida.play()
         for jogador in partida.jogadores:
