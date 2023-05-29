@@ -18,9 +18,17 @@ onde vai receber o estado do jogo (com as suas cartas) e retornará a jogada, qu
 
 Este jogo segue as regras do [TEXAS HOLD'EM](https://en.wikipedia.org/wiki/Texas_hold_%27em).
 
-Na pasta `estrategias` haverão diversas implementações para se testar.
 
 Todas as cartas são representada como `f(naipe,valor) = "{naipe}{valor}"`, onde `naipe` pode ser `[E,O,P,C]` representando espadas, ouros, paus e copas. O `valor` pode ser `[A,K,Q,J,10,9,8,7,6,5,4,3,2]` represetando os valores (em ordem decrescente) das cartas do poker. Por exemplo, `E4` significa *4 de paus* ou `OQ` significa *dama de ouros*.
+
+Boa parte do projeto foi gasta implentando o sistema e removendo bugs. Acabou que os algoritmos não estão tão bem feitos quanto eu queria.
+
+### Estrutura
+
+Na pasta `estrategias/` tem diversas implementações para se testar (colocando o conteúdo do arquivo em `scriptA.py` ou `scriptB.py`)
+`sim.py` chama os scripts A e B, contém o funcionamento de um jogo de poker
+`analise.py` realiza uma analise sobre centenas de jogos realizados por `sim.py` salvos no arquivo `log_jogos.json`
+`common.py` estruturas comuns entre script de estrategia e simulador, como `Carta()` ou uma calculadora de vitória baseada em listas de cartas
 
 ## Screenshots
 <!-- Adicione 3 ou mais screenshots do projeto em funcionamento. -->
