@@ -35,7 +35,7 @@ def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
                 return False, max_aposta
 
     # não desiste, nem aposta
-    return False, estado.aposta_minima
+    return False, min(estado.aposta_minima, estado.banca_jogadores[estado.my_id])
 
 
 def test():

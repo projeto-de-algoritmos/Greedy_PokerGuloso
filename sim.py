@@ -220,7 +220,7 @@ class Partida:
 
     descritor_partida: dict
 
-    def __init__(self, valor_inicial: int = 1000, big_blind: int = 0, small_blind: int = 1, seed: int = 1):
+    def __init__(self, valor_inicial: int = 1000, big_blind: int = 0, small_blind: int = 1, seed: int = 1, jogadores: list[Jogador] = []):
         self.historico_estado = []
         self.mesa = []
         self.banca = 0
@@ -240,6 +240,17 @@ class Partida:
         self.small_blind = (small_blind - 1 + seed) % len(self.jogadores)
         self.calculadora = CalculadoraDeVitoria()
         self.descritor_partida = {}
+
+        if jogadores is None or len(jogadores) == 0:
+            self.jogadores = [
+                Jogador(fazer_jogadaA, cartas[0:2], valor_inicial, 0),
+                Jogador(fazer_jogadaB, cartas[2:4], valor_inicial, 1),
+            ]
+
+        for jogador in self.jogadores:
+            i = self.jogadores.index(jogador)
+            jogador.banca = valor_inicial
+            jogador.cartas = cartas[(i*2):(i*2 + 2)]
 
     def pega_carta_deck(self):
         self.deck, carta_nova = self.deck[1:], self.deck[0]
@@ -381,6 +392,7 @@ class Partida:
                     }for v_i in range(len(vencedores))
                 ],
                 'vencedor': [jogadores[j].nome for j in vencedores],
+                'eventos_partida': self.historico_estado
             }
 
             while len(jogadores) > 0 and jogadores[0].aposta_total == pote:
@@ -389,11 +401,19 @@ class Partida:
 
 def main():
     jogos = []
+    jogadores = None
     for i in range(1000):
-        partida = Partida(seed=i)
+        partida = Partida(seed=i, jogadores=jogadores)
         historico_estado = partida.play()
+        for jogador in partida.jogadores:
+            if jogador.banca <= 0:
+                historico_estado.append(
+                    "jogador " + jogador.nome + " faliu. Resetando todas as bancas")
+                for jogador in partida.jogadores:
+                    jogador.banca = 1000
         print(json.dumps(historico_estado, indent=4))
         jogos.append(partida.descritor_partida.copy())
+        jogadores = partida.jogadores.copy()
 
     with open("log_jogos.json", "w") as f:
         f.write(json.dumps({'jogos': jogos}, indent=2) + "\n")

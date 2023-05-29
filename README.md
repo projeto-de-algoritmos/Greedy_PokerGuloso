@@ -53,6 +53,18 @@ Note que:
 ## Uso 
 
 
+Para executar a simulação de jogos, rode: 
+```
+python sim.py
+```
+Esse comando vai gerar um arquivo `log_jogos.json` e `logs/log_jogos_<timestamp>.json`
+Este arquivo é usado para análise, que gera estatísticas sobre os jogos e permitem o desenvolvimento de um algoritmo melhor.
+
+Para executar a análise (que uso o `log_jogos.json`), rode:
+```
+python analise.py
+```
+
 
 ## Outros 
 #### Considerações sobre o projeto
