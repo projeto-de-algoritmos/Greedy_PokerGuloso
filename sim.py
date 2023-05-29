@@ -132,6 +132,7 @@ class Rodada:
         jogador.aposta_turno_atual += aumento
         jogador.aposta_total += aumento
         self.pote_rodada += aumento
+        self.valor_necessario = 0
 
     def aumenta(self, jogador: Jogador, aumento):
         if aumento > jogador.banca:
