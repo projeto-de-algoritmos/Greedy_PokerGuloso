@@ -8,25 +8,22 @@ CUTOFF = 0.7
 
 def fazer_jogada(estado: EstadoDoJogoParaJogador) -> tuple[bool, int]:
     mao_completa = estado.mesa + estado.mao
-    # print(mao_completa)
     buckets = CalculadoraDeVitoria(
     ).get_labeled_buckets([mao_completa])
 
     for bucket in buckets:
         if len(bucket['cartas']) > 0:
-            # print(f"i have a bucket: {bucket}")
 
-            # do i have an unfair advantage?
+            # eu tenho um vantagem injusta?
+            # ou seja, eu tenho algum carta que me faz ganhar com facilidade? tipo, tenho uma carta que faz uma trinca?
             cards_only_i_have = [
                 card for card in estado.mao if card in bucket['cartas'][0]]
-
+            # print(cards_only_i_have)
             max_aposta = estado.banca_jogadores[estado.my_id]
 
             if max_aposta < estado.aposta_minima*2:
                 max_aposta = estado.aposta_minima
 
-            print(
-                f"ok max_aposta={max_aposta} estado.aposta_minima={estado.aposta_minima} banca_jogadores={estado.banca_jogadores[estado.my_id]}")
             # all-in
             if max_aposta < estado.banca_jogadores[estado.my_id]:
                 max_aposta = estado.banca_jogadores[estado.my_id]

@@ -120,6 +120,7 @@ class Rodada:
         elif aumento == valor_que_falta:
             self.historico_estado.append(
                 f"jogador {jogador.nome} igualou a aposta {aumento}")
+            self.iguala(jogador, aumento)
 
         elif aumento > valor_que_falta:
             if self.valor_necessario * 2 > aposta_total:
@@ -132,7 +133,6 @@ class Rodada:
         jogador.aposta_turno_atual += aumento
         jogador.aposta_total += aumento
         self.pote_rodada += aumento
-        self.valor_necessario = 0
 
     def aumenta(self, jogador: Jogador, aumento):
         if aumento > jogador.banca:
@@ -178,6 +178,7 @@ class Rodada:
             self.indice_jogador_atual = (i + 1) % len(self.jogadores)
             self.turnos_jogados += 1
 
+        self.valor_necessario = 0
         return self.jogadores
 
     def get_historico(self):
@@ -270,6 +271,8 @@ class Partida:
             while len(self.mesa) < i:
                 self.pega_carta_deck()
             self.historico_estado.append(f"cartas na mesa: {self.mesa}")
+            self.historico_estado.append(
+                f"bancas: {[jogador.banca for jogador in jogadores]}")
 
             rodada = Rodada(jogadores, self.mesa)
             jogadores = rodada.processar_rodada()

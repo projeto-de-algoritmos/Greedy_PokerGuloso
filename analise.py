@@ -7,13 +7,17 @@ def estatisticas():
     cartas_vencedoras = []
     jogadas_vencedoras = []
     empates = []
+    vitorias_A = 0
+    vitorias_B = 0
     for jogo in jogos:
         if len(jogo["vencedor"]) == 1 and jogo["vencedor"][0] == "A":
             cartas_vencedoras += jogo["jogadorA"]
             jogadas_vencedoras.append(jogo["condicao_vitoria"][0]["jogada"])
+            vitorias_A += 1
         elif len(jogo["vencedor"]) == 1 and jogo["vencedor"][0] == "B":
             cartas_vencedoras += jogo["jogadorB"]
             jogadas_vencedoras.append(jogo["condicao_vitoria"][0]["jogada"])
+            vitorias_B += 1
         else:
             empates.append(jogo)
 
@@ -22,10 +26,13 @@ def estatisticas():
     hist_cartas = build_histogram_from_list(cartas_vencedoras)
     hist_vitoria = build_histogram_from_list(jogadas_vencedoras)
 
-    print(f"jogos: {len(jogos)} ")
+    print(f"jogos: \t{len(jogos)} ")
+    print(f"vitorias A: \t{vitorias_A} ")
+    print(f"vitorias B: \t{vitorias_B} ")
+    print(f"empates: \t{len(empates)} ")
     print_object(hist_cartas, "cartas vencedoras")
     print_object(hist_vitoria, "jogadas vencedoras")
-    print_object(empates, "empates")
+    # print_object(empates, "empates")
 
 
 def print_object(hist, nome):
