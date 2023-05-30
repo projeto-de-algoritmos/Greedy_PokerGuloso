@@ -59,7 +59,7 @@ class Carta:
         return self.valor_i >= other.valor_i
 
     def __lt__(self, other) -> bool:
-        return self.valor_i >= other.valor_i
+        return self.valor_i <= other.valor_i
 
     def to_json(self):
         return {
