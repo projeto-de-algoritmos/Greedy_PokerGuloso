@@ -25,10 +25,10 @@ Boa parte do projeto foi gasta implentando o sistema e removendo bugs. Acabou qu
 
 ### Estrutura
 
-Na pasta `estrategias/` tem diversas implementações para se testar (colocando o conteúdo do arquivo em `scriptA.py` ou `scriptB.py`)
-`sim.py` chama os scripts A e B, contém o funcionamento de um jogo de poker
-`analise.py` realiza uma analise sobre centenas de jogos realizados por `sim.py` salvos no arquivo `log_jogos.json`
-`common.py` estruturas comuns entre script de estrategia e simulador, como `Carta()` ou uma calculadora de vitória baseada em listas de cartas
+- Na pasta `estrategias/` tem diversas implementações para se testar (colocando o conteúdo do arquivo em `scriptA.py` ou `scriptB.py`)
+- `sim.py` chama os scripts A e B, contém o funcionamento de um jogo de poker
+- `analise.py` realiza uma analise sobre centenas de jogos realizados por `sim.py` salvos no arquivo `log_jogos.json`
+- `common.py` estruturas comuns entre script de estrategia e simulador, como `Carta()` ou uma calculadora de vitória baseada em listas de cartas
 
 ## Screenshots
 <!-- Adicione 3 ou mais screenshots do projeto em funcionamento. -->
