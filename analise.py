@@ -122,7 +122,7 @@ def compara_todas_as_estrategias(should_print=False, use_computed=False):
         for scriptB in scripts[index:]:
             ret = None
             print(f"comparando A='{scriptA}' com B='{scriptB}'")
-            if use_computed and find_computed(scriptA, scriptB):
+            if use_computed and  find_computed(scriptA, scriptB):
                 print(f"usando previamente computado")
                 ret = load_computed(scriptA, scriptB)
             else:
